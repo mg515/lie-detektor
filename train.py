@@ -329,7 +329,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 			print("Beginning spatial training.")
 			# Spatial Training
 			if tensorboard_flag == 1:
-				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
+				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,tbCallBack2])
 			
 			elif channel_flag == 3 or channel_flag == 4:
 				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history, stopping])				
@@ -342,7 +342,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 					output_gray = model_gray.predict(Train_X_Gray, batch_size=batch_size)
 
 			else:
-				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history, stopping])
+				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history])
 
 			print(".record f1 and loss")
 			# record f1 and loss
