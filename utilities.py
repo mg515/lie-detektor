@@ -354,6 +354,17 @@ def loading_samm_table(root_db_path, dB, objective_flag):
 	# print(table)
 	return table, table_objective
 
+
+def read_subjects_todo(db_home, dB, train_id, subjects):
+
+	#/home/mihag/Documents/ME_data/CASME2_Optical/Classification/Result/CASME2_Optical
+	file = open(db_home+'Classification/Result/'+dB+'/predicts_' + str(train_id) +  '.txt', 'r')
+	lastLine = file.readlines()[-1]
+	lastSubject = int(lastLine.split(',')[0][-1])
+	subjects_todo = [sub for sub in range(subjects) if sub > lastSubject]
+	
+	return subjects_todo
+
 def filter_objective_samples(table): # this is to filter data with objective classes which is 1-5, omitting 6 and 7
 	list_samples = []
 	sub = table[0, :, 0]

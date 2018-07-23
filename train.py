@@ -35,7 +35,7 @@ from keras.callbacks import EarlyStopping
 from labelling import collectinglabel
 from reordering import readinput
 from evaluationmatrix import fpr, weighted_average_recall, unweighted_average_recall
-from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LOSO, label_matching, duplicate_channel
+from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LOSO, label_matching, duplicate_channel, read_subjects_todo
 from utilities import loading_smic_table, loading_casme_table, loading_samm_table, ignore_casme_samples, ignore_casmergb_samples # data loading scripts
 from utilities import record_loss_accuracy, record_weights, record_scores, LossHistory # recording scripts
 from utilities import sanity_check_image, gpu_observer
@@ -205,8 +205,9 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 	print("Beginning training process.")
 	########### Training Process ############
+	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
 
-	for sub in range(subjects):
+	for sub in subjects_todo:
 		print(".starting subject" + str(sub))
 		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/vgg_spatial_'+ str(train_id) + '_' + str(dB) + '_'
@@ -337,7 +338,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 			print("Beginning spatial training.")
 			# Spatial Training
 			if tensorboard_flag == 1:
-				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,tbCallBack2])
+				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 			
 			elif channel_flag == 3 or channel_flag == 4:
 				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history, stopping])				
@@ -354,7 +355,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 			print(".record f1 and loss")
 			# record f1 and loss
-			record_loss_accuracy(db_home, train_id, dB, history)		
+			record_loss_accuracy(db_home, train_id, dB, history)
 
 			print(".save vgg weights")
 			# save vgg weights
