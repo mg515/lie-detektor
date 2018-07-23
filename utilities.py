@@ -47,12 +47,17 @@ def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, wo
 		vid_id = np.empty([0])       
 
 		for vid in sorted([inrfile for inrfile in os.listdir(inputDir+sub)]):
-				
+			
 			path = inputDir + sub + '/' + vid + '/' # image loading path
 			if path in listOfIgnoredSamples:
 				continue
 
-			imgList = readinput(path)  
+			imgList = readinput(path)
+
+			# throw first one away, since there is 10 instead of 9 as in strain and OF
+			if dB=='CASME2_TIM10':
+				imgList.pop(0)
+
 			numFrame = len(imgList)
 
 			if resizedFlag == 1:
@@ -175,7 +180,6 @@ def standard_data_loader(SubjectPerDatabase, y_labels, subjects, classes):
 def data_loader_with_LOSO(subject, SubjectPerDatabase, y_labels, subjects, classes):
 	Train_X = []
 	Train_Y = []
-
 
 	Test_X = np.array(SubjectPerDatabase[subject])
 	Test_Y = np_utils.to_categorical(y_labels[subject], classes)
@@ -374,9 +378,10 @@ def ignore_casme_samples(db_path, list_db):
 	# ignored due to:
 	# 1) no matching label.
 	# 2) fear, sadness are excluded due to too little data, see CASME2 paper for more
-	IgnoredSamples = ['sub09/EP13_02/','sub09/EP02_02f/','sub10/EP13_01/','sub17/EP15_01/',
-						'sub17/EP15_03/','sub19/EP19_04/','sub24/EP10_03/','sub24/EP07_01/',
-						'sub24/EP07_04f/','sub24/EP02_07/','sub26/EP15_01/' ]
+	IgnoredSamples = []
+	# IgnoredSamples = ['sub09/EP13_02/','sub09/EP02_02f/','sub10/EP13_01/','sub17/EP15_01/',
+	# 					'sub17/EP15_03/','sub19/EP19_04/','sub24/EP10_03/','sub24/EP07_01/',
+	# 					'sub24/EP07_04f/','sub24/EP02_07/','sub26/EP15_01/' ]
 	# IgnoredSamples = ['sub09/EP02_02f/', 'sub24/EP02_07/']
 	# inputDir2 = "/media/ice/OS/Datasets/" + 'CASME2_Strain_TIM10' + '/' + 'CASME2_Strain_TIM10' + '/'
 	# inputDir3 = "/media/ice/OS/Datasets/" + 'CASME2_TIM' + '/' + 'CASME2_TIM' + "/"
