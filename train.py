@@ -138,8 +138,10 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 			SubperdB_strain = Read_Input_Images(db_strain_img, listOfIgnoredSamples, aux_db1, resizedFlag, table, db_home, spatial_size, 1, objective_flag)
 
 	elif channel_flag == 2:	
+
 		aux_db1 = list_dB[1]
 		aux_db2 = list_dB[2]
+
 		db_strain_img = root_db_path + aux_db1 + "/" + aux_db1 + "/"	
 		db_gray_img = root_db_path + aux_db2 + "/" + aux_db2 + "/"
 		if cross_db_flag == 1:
@@ -175,6 +177,12 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 	########### Model Configurations #######################
 	K.set_image_dim_ordering('th')
+
+	# config = tf.ConfigProto()
+	# config.gpu_options.allow_growth = True
+	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
+	# K.tensorflow_backend.set_session(tf.Session(config=config))
+
 	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
 	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
@@ -303,9 +311,9 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 			_, _, _, _, _, Train_X_Gray, Train_Y_Gray, Test_X_Gray, Test_Y_Gray = restructure_data(sub, SubperdB_gray, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 1)
 
-			# Concatenate Train_X_Strain & Train_X & Train_X_gray
-			X = np.concatenate((X, Train_X_Strain, Train_X_gray), axis=1)
-			test_X = np.concatenate((test_X, Test_X_Strain, Test_X_gray), axis=1)	
+			# Concatenate Train_X_Strain & Train_X & Train_X_Gray
+			X = np.concatenate((X, Train_X_Strain, Train_X_Gray), axis=1)
+			test_X = np.concatenate((test_X, Test_X_Strain, Test_X_Gray), axis=1)	
 
 			total_channel = 5		
 		
