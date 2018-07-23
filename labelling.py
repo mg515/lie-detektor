@@ -82,35 +82,47 @@ def collectinglabel(Table, sub, videoName, workplace, db, objective_flag):
  
     # CASME2 usually.
     else:
-
         for var in range(len(Table)):
 
             result = -1
             if ( videoName == Table[var,1] or Table[var, 1] in videoName ) and sub == Table[var,0]:
                 # print(Table[var])
-                if Table[var,2]=='happiness':
-                    result=0
-                    break
-                if Table[var,2]=='disgust':
-                    result=1
-                    break
-                if Table[var,2]=='repression':
-                    result=2
-                    break
-                if Table[var,2]=='surprise':
-                    result=3
-                    break
-                if Table[var,2]=='others':
-                    result=4
-                    break
+                # if Table[var,2]=='happiness':
+                #     result=0
+                #     break
+                # if Table[var,2]=='disgust':
+                #     result=1
+                #     break
+                # if Table[var,2]=='repression':
+                #     result=2
+                #     break
+                # if Table[var,2]=='surprise':
+                #     result=3
+                #     break
+                # if Table[var,2]=='others':
+                #     result=4
+                #     break
                 # if Table[var,2]=='sadness':
                 #     result = 5
                 #     break
                 # if Table[var,2]=='fear':
                 #     result = 6
                 #     break
-        
-
+                # popravljeno na ver3
+                #print(Table[var])
+                if Table[var,2]=='positive':
+                    result=0
+                    break
+                if Table[var,2]=='negative':
+                    result=1
+                    break
+                if Table[var,2]=='surprise':
+                    result=2
+                    break
+                if Table[var,2]=='others':
+                    result=3
+                    break
+                
     if result != -1 :
 
         with open(workplace + db + '_label.txt','a') as f:
