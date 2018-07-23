@@ -71,7 +71,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 	tot_mat = np.zeros((n_exp, n_exp))
 
 	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min')
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 
 	############################################
 
@@ -350,7 +350,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 					output_gray = model_gray.predict(Train_X_Gray, batch_size=batch_size)
 
 			else:
-				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history])
+				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 			print(".record f1 and loss")
 			# record f1 and loss
