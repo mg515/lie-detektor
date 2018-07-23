@@ -20,18 +20,20 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 	db_images = db_path + db_name + "/" + db_name + "/"
 
 	cross_db_flag = 0
-	print(db_name)
+	print("retrieving data for:" + db_name)
 
 
 	if db_name == 'CASME2_TIM':
-		table = loading_casme_table(db_home + 'CASME2_label_Ver_2.xls')
+		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
 
 		r = w = spatial_size
 		subjects=26
-		samples = 246
-		n_exp = 5
-		VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
+		samples = 257
+		n_exp = 4
+		
+		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
+		VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
 
 		timesteps_TIM = 9
 		data_dim = r * w
@@ -42,13 +44,13 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 	elif db_name == 'CASME2_Optical':
 		print("arrived")
-		table = loading_casme_table(db_home + 'CASME2_label_Ver_2.xls')
+		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
 
 		r = w = spatial_size
 		subjects=26
-		samples = 246
-		n_exp = 5
+		samples = 257
+		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
 		VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
@@ -167,11 +169,34 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		return r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, list_samples, db_home, db_images, cross_db_flag
 
 
+	elif db_name == 'CASME_DTSCNN':
+		print("arrived")
+		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
+		listOfIgnoredSamples, IgnoredSamples_index = [[], []]
+
+		r = 112
+		w = 96
+		subjects=26
+		samples = 255
+		n_exp = 4
+
+		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
+		VidPerSubject = get_vid_per_subject(table, [])
+
+		timesteps_TIM = 9
+		data_dim = r * w
+		channel = 3
+
+		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+			os.remove(db_home + "Classification/" + db_name + "_label.txt")
+
+
 	return r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag
 
 def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
 	Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
 	# Rearrange Training labels into a vector of images, breaking sequence
+
 	Train_X_spatial = Train_X.reshape(Train_X.shape[0]*timesteps_TIM, r, w, channel)
 	Test_X_spatial = Test_X.reshape(Test_X.shape[0]* timesteps_TIM, r, w, channel)
 
