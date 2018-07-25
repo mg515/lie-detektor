@@ -1,7 +1,7 @@
 image_counter = 1
 
-path = "/home/mihag/Documents/ME_data/CASME_DTSCNN/CASME_DTSCNN/"
-flow_output = "/home/mihag/Documents/ME_data/CASME_DTSCNN/OF/"
+path = "/home/mihag/Documents/ME_data/CASME2_Color_TIM10/CASME2_Color_TIM10/"
+flow_output = "/home/mihag/Documents/ME_data/CASME2_Color_TIM10/OF/"
 
 
 string_single_digit = "00"

@@ -68,7 +68,7 @@ def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, wo
 				[row,col,_l] = img.shape
 
 			## read the label for each input video
-			collectinglabel(table, sub[3:], vid, workplace+'Classification/', dB, objective_flag)
+			collectinglabel(table, sub[3:], vid.split(".")[0], workplace+'Classification/', dB, objective_flag)
 
 
 			for var in range(numFrame):
@@ -116,7 +116,15 @@ def get_vid_per_subject(table, listOfIgnoredLabels):
 	out = pdt.groupby('sub').size().tolist()
 	return out
 
+def get_vid_per_subject_augmented(vidPath):
 
+	subjectFolders = sorted([x for x in os.listdir(vidPath)])
+	numSubfolders = []
+	for subf in subjectFolders:
+		path2 = vidPath + subf
+		numSubfolders.append(str(len(os.listdir(path2))))
+
+	return numSubfolders
 
 
 def get_subfolders_num(path, IgnoredSamples_index):

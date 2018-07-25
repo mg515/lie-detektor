@@ -187,7 +187,7 @@ def augmentation_casme(db_images, outputDir, table, resizedFlag, r, w):
 					
 				[_,_,dim] = img.shape
 					
-				img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+				#img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 				if resizedFlag == 1:
 					img = cv2.resize(img, (col,row))

@@ -47,7 +47,7 @@ from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_aut
 from keras import backend as K
 
 
-
+import ipdb
 
 def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatial_size, flag, objective_flag, tensorboard):
 	############## Path Preparation ######################
@@ -125,6 +125,9 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		SubperdB = Read_Input_Images(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
 
 
+	ipdb.set_trace()
+	
+
 	labelperSub = label_matching(db_home, dB, subjects, VidPerSubject)
 	print("Loaded Images into the tray.")
 	print("Loaded Labels into the tray.")
@@ -200,7 +203,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 	########################################################
 
-
+	ipdb.set_trace()
 
 
 	print("Beginning training process.")
@@ -290,10 +293,11 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 			os.mkdir(cat_path2)
 			tbCallBack2 = keras.callbacks.TensorBoard(log_dir=cat_path2, write_graph=True)
 		#############################################
+		ipdb.set_trace()
 
 		Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt, X, y, test_X, test_y = restructure_data(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
 
-
+		ipdb.set_trace()
 		# Special Loading for 4-Channel
 		if channel_flag == 1:
 			_, _, _, _, _, Train_X_Strain, Train_Y_Strain, Test_X_Strain, Test_Y_Strain = restructure_data(sub, SubperdB_strain, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 1)
@@ -331,7 +335,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 		print("Beginning training & testing.")
 		##################### Training & Testing #########################
-		
+		ipdb.set_trace()
 
 		if train_spatial_flag == 1 and train_temporal_flag == 1:
 

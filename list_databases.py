@@ -10,7 +10,7 @@ import pandas as pd
 from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LOSO, label_matching, duplicate_channel
 from utilities import record_scores, LossHistory, filter_objective_samples
 from utilities import loading_samm_table, loading_smic_table, loading_casme_table, ignore_casme_samples, ignore_casmergb_samples, loading_casme_objective_table
-from utilities import get_vid_per_subject
+from utilities import get_vid_per_subject, get_vid_per_subject_augmented
 from samm_utilitis import get_subfolders_num_crossdb, loading_samm_labels
 
 
@@ -42,7 +42,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
-	elif db_name == 'CASME2_Optical':
+	elif db_name == 'CASME2_Optical' or db_name == 'CASME2_Color_TIM10' or db_name == 'CASME2_Augmented_TIM10':
 		print("arrived")
 		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
@@ -167,6 +167,27 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		cross_db_flag = 1
 		return r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, list_samples, db_home, db_images, cross_db_flag
+
+	elif db_name == 'CASME2_Optical_Aug':
+		print("arrived")
+		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
+		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
+
+		r = w = spatial_size
+		subjects=26
+		samples = 2000
+		n_exp = 4
+
+		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
+		import ipdb
+		VidPerSubject = get_vid_per_subject_augmented(db_images)
+
+		timesteps_TIM = 9
+		data_dim = r * w
+		channel = 3		
+
+		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
 
 	elif db_name == 'CASME_DTSCNN':
