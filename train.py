@@ -49,6 +49,8 @@ from keras import backend as K
 
 import ipdb
 
+
+# nohup python main.py --dB 'CASME2_Optical_Aug' --batch_size=20 --spatial_epochs=100 --temporal_epochs=50 --train_id='casme2_ofOrg_aug' --spatial_size=224 --flag='st' &
 def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatial_size, flag, objective_flag, tensorboard):
 	############## Path Preparation ######################
 	root_db_path = "/home/mihag/Documents/ME_data/"
