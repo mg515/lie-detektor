@@ -122,7 +122,7 @@ def get_vid_per_subject_augmented(vidPath):
 	numSubfolders = []
 	for subf in subjectFolders:
 		path2 = vidPath + subf
-		numSubfolders.append(str(len(os.listdir(path2))))
+		numSubfolders.append(len(os.listdir(path2)))
 
 	return numSubfolders
 
