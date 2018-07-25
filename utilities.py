@@ -358,11 +358,17 @@ def loading_samm_table(root_db_path, dB, objective_flag):
 def read_subjects_todo(db_home, dB, train_id, subjects):
 
 	#/home/mihag/Documents/ME_data/CASME2_Optical/Classification/Result/CASME2_Optical
-	file = open(db_home+'Classification/Result/'+dB+'/predicts_' + str(train_id) +  '.txt', 'r')
-	lastLine = file.readlines()[-1]
-	lastSubject = int(lastLine.split(',')[0][-1])
-	subjects_todo = [sub for sub in range(subjects) if sub > lastSubject]
-	
+	filePath = db_home+'Classification/Result/'+dB+'/predicts_' + str(train_id) +  '.txt'
+
+	if os.path.isfile(filePath):
+		file = open(filePath, 'r')
+		lastLine = file.readlines()[-1]
+		lastSubject = int(lastLine.split(',')[0][-1])
+		subjects_todo = [sub for sub in range(subjects) if sub > lastSubject]
+
+	else: 
+		subjects_todo = [sub for sub in range(subjects)]
+
 	return subjects_todo
 
 def filter_objective_samples(table): # this is to filter data with objective classes which is 1-5, omitting 6 and 7
@@ -509,7 +515,7 @@ def record_loss_accuracy(db_home, train_id, db, history_callback):
 def record_weights(model, weights_name, subject, flag):
 	model.save_weights(weights_name + str(subject) + ".h5")
 
-	if flag == 's' or flag == 'st':
+	if flag == 's' or flag == 'st' or flag == 'st7se':
 		model = Model(inputs=model.input, outputs=model.layers[35].output)
 		plot_model(model, to_file = "spatial_module_FULL_TRAINING.png", show_shapes=True)	
 	else:

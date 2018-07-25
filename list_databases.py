@@ -174,10 +174,10 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = [[], []]
 
-		r = 112
-		w = 96
+		r = 224 #165, 282
+		w = 224 #135, 231
 		subjects=26
-		samples = 255
+		samples = 257
 		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
