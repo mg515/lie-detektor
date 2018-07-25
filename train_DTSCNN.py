@@ -76,17 +76,17 @@ def train_DTSCNN(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB,
 	############## Flags ####################
 	tensorboard_flag = tensorboard
 	resizedFlag = 1
-	train_spatial_flag = 0
-	train_temporal_flag = 0
+	train_spatial_flag = 1
+	train_temporal_flag = 1
 	svm_flag = 0
-	finetuning_flag = 0
+	finetuning_flag = 1
 	cam_visualizer_flag = 0
 	channel_flag = 0
+	augmentation_flag = 0
 
 	#########################################
 
 	############ Reading Images and Labels ################
-    
 	SubperdB = Read_Input_Images_DTSCNN(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, r, w, channel)
 
 
