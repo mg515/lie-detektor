@@ -41,7 +41,7 @@ from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LO
 from utilities import loading_smic_table, loading_casme_table, loading_samm_table, ignore_casme_samples, ignore_casmergb_samples # data loading scripts
 from utilities import record_loss_accuracy, record_weights, record_scores, LossHistory # recording scripts
 from utilities import sanity_check_image, gpu_observer
-from utils_DTSCNN import Read_Input_Images_DTSCNN
+from utils_DTSCNN import *
 
 from list_databases import load_db, restructure_data
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder
@@ -64,7 +64,6 @@ def train_DTSCNN(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB,
 	dB = list_dB[0]
 	r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag = load_db(root_db_path, list_dB, spatial_size, objective_flag)
 
-
 	# total confusion matrix to be used in the computation of f1 score
 	tot_mat = np.zeros((n_exp, n_exp))
 
@@ -82,11 +81,19 @@ def train_DTSCNN(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB,
 	finetuning_flag = 1
 	cam_visualizer_flag = 0
 	channel_flag = 0
-	augmentation_flag = 0
+	augmentation_flag = 1
 
 	#########################################
 
 	############ Reading Images and Labels ################
+
+	if augmentation_flag:
+		augmentation_casme(db_images, db_images+"augmentation/", table, resizedFlag, r, w)
+
+	import ipdb
+	ipdb.set_trace()
+
+>>>>>>> 35641aed14f55b8bf75e860c8566b9f42828c67b
 	SubperdB = Read_Input_Images_DTSCNN(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, r, w, channel)
 
 

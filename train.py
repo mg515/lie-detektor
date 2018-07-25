@@ -459,14 +459,14 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		del Train_X, Test_X, X, y
 		
 		if channel_flag == 1:
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Train_Y_Strain
+			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain
 		elif channel_flag == 2:
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Train_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
+			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
 		elif channel_flag == 3:
 			del vgg_model_strain, model_strain	
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Train_Y_Strain
+			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain
 		elif channel_flag == 4:
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Train_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
+			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
 			del vgg_model_gray, vgg_model_strain, model_gray, model_strain
 		
 		gc.collect()

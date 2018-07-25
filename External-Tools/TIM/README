@@ -1,0 +1,23 @@
+This is the MATLAB code for the paper "Recognising Spontaneous Facial Micro-expressions" in ICCV'11.
+If you use this code or the associated SMIC corpus please cite
+
+@inproceedings{pfister2011micro,
+  title={Recognising Spontaneous Facial Micro-expressions},
+  author={Tomas Pfister and Xiaobai Li and Guoying Zhao and Matti Pietik\"ainen},
+  booktitle={Proceedings of the International Conference on Computer Vision (ICCV)},
+  year={2011}
+}
+
+-----------------------------------------------------------------------------------------------------
+
+-- Eye Detector --
+The Haar eye detector is available on-line at http://mozart.dis.ulpgc.es/Gias/modesto_eng.html
+
+-- Temporal Interpolation Model (TIM) --
+We provide the binary code for this. For further details see
+Z. Zhou, G. Zhao, and M. Pietikainen. Towards a Practical Lipreading System. In CVPR, 2011.
+
+
+Tomas Pfister on 19 July 2011
+URL: http://tomas.pfister.fi/micro-expressions
+Contact E-mail: tomas.pfister@cantab.net

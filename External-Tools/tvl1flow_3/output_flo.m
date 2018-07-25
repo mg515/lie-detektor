@@ -4,9 +4,9 @@ image_counter = 1
 %path = "/home/vipr/Documents/CASME2_TIM/CASME2_TIM/"
 %flow_output = "/home/vipr/Documents/tvl1flow_3/flow/"
 %image_output = "/home/vipr/Documents/tvl1flow_3/optical_image/"
-path = '/home/ice/Documents/Micro-Expression/External-Tools/tvl1flow_3/CASME2_TIM/'
-flow_output = '/home/ice/Documents/Micro-Expression/External-Tools/tvl1flow_3/flow/'
-image_output = '/home/ice/Documents/Micro-Expression/External-Tools/tvl1flow_3/optical_image/'
+path = "/home/mihag/Documents/ME_data/CASME_DTSCNN/CASME_DTSCNN/"
+flow_output = "/home/mihag/Documents/ME_data/CASME_DTSCNN/OF/"
+image_output = "/home/mihag/Documents/ME_data/CASME_DTSCNN/OF_out/"
 
 string_single_digit = "00"
 string_double_digit = "0"
@@ -35,27 +35,25 @@ while sub_counter <= 26
     sub_counter ++
     
     for i=1:length(subfolders)
-      video_path = subfolders(i).name
+      video_path = subfolders(i).name;
 %      disp(video_path)
-      mkdir_str = [image_output, sub_path, "/", video_path]
-      mkdir(mkdir_str)
-      image_counter = 1
-      while image_counter < (tim_size + 1)
+      mkdir_str = [image_output, sub_path, "/", video_path];
+      mkdir(mkdir_str);
+      for i=1:(tim_size-1)
         if image_counter >= 10
-            string_to_parse = [path, sub_path, "/", video_path, "/", string_double_digit, int2str(image_counter), picture_ext]
-            string_to_parse_for_flow = [flow_output, sub_path, "/", video_path, "/"]
+            %string_to_parse = strcat(path, sub_path, "/", video_path, "/", string_double_digit, int2str(image_counter), picture_ext)
+            string_to_parse_for_flow = strcat(flow_output, sub_path, "/", video_path, "/");
             
         else
-            string_to_parse = [path, sub_path, "/", video_path, "/", string_single_digit, int2str(image_counter), picture_ext]
-            string_to_parse_for_flow = [flow_output, sub_path, "/", video_path, "/"]
+            %string_to_parse = strcat(path, sub_path, "/", video_path, "/", string_single_digit, int2str(image_counter), picture_ext)
+            string_to_parse_for_flow = strcat(flow_output, sub_path, "/", video_path, "/");
         
         end
         
-        image_array = strvcat(image_array, string_to_parse)
-        array_for_flow_output = strvcat(array_for_flow_output, string_to_parse_for_flow)
+        %image_array = strvcat(image_array, string_to_parse);
+        array_for_flow_output = strvcat(array_for_flow_output, string_to_parse_for_flow);
         
-        image_counter++
-      
+
       end
     end
     
@@ -65,24 +63,23 @@ end
 
 flow_counter = 1
 ext = ".flo"
-counter =   1
+counter = 1
 while counter <= length(array_for_flow_output)
   
-  if mod(counter,tim_size) != 0
   
-    target_flow = [ array_for_flow_output(counter,:), int2str(counter), ext ] 
+    target_flow = [ array_for_flow_output(counter,:), int2str(counter), ext ]
     target_flow = regexprep(target_flow, ' +', '')
-    
+
     single_output = array_for_flow_output(counter, :)
     single_output = regexprep(single_output, 'flow/', 'optical_image/')
-    
+
     output = readFlowFile(target_flow)
     of_x = output(:, :, 1)
     of_y = output(:, :, 2)
     write_x = [ single_output, int2str(flow_counter), "_x.png" ]
     write_y = [ single_output, int2str(flow_counter), "_y.png" ]
-    
-    
+
+
     % calculate flow magnitude and combine the whole thing into a 3-Channel Flow Image
     scaling = 16
     shifting = 128
@@ -92,32 +89,31 @@ while counter <= length(array_for_flow_output)
     flow_image = zeros(x, y, 3)
     of_x = of_x * scaling + shifting
     of_y = of_y * scaling + shifting
-    
+
     of_x = min(of_x,255)
     of_x = max(of_x , 0)
     of_y = min(of_y, 255)
     of_y = max(of_y, 0)
     of_x = uint8(of_x)
     of_y = uint8(of_y)
-    
+
     flow_image = uint8(flow_image)
-    
-    
+
+
     flow_image(:, :, 1) = of_x
     flow_image(:, :, 2) = of_y
     flow_image(:, :, 3) = mag
     write_flow = [ single_output, int2str(flow_counter), ".png" ]
-    
+
     % remove white space
     write_x = strrep(write_x, '  ', '')
     write_y = strrep(write_y, '  ', '')
     write_flow = strrep(write_flow, '  ', '')
-    
-    
-%    imwrite(of_x, write_x)
-%    imwrite(of_y, write_y)
+
+
+    %    imwrite(of_x, write_x)
+    %    imwrite(of_y, write_y)
     imwrite(flow_image, write_flow)
-  end
   
   flow_counter ++
   if flow_counter > (tim_size-1)
