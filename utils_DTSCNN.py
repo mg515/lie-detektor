@@ -161,9 +161,11 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 			# first we ensure that every original video is processed, then we start sampling randomly until we have enough
 			if i <= (table_emotion.shape[0]-1):
 				random_pick = table_emotion.iloc[[i]] # not so random
+				print("processing original video #" + str(i) + " emotion=" + emotion)
 			else:
 				random_pick = table_emotion.sample(n=1) # very random
 				cutStyle = randint(1,8)
+				print("processing augmented video #" + str(i) + "emotion" + emotion)
 
 
 			path = db_images+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"/"

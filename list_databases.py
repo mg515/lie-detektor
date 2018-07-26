@@ -179,7 +179,6 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
-		import ipdb
 		VidPerSubject = get_vid_per_subject_augmented(db_images)
 
 		timesteps_TIM = 9
