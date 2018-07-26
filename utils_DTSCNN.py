@@ -151,8 +151,6 @@ def augment_image(image, style, row, col, cutSize):
 
 
 def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, w):
-	import ipdb
-	ipdb.set_trace()
 
 	for emotion in ['positive', 'negative', 'surprise', 'others']:
 		table_emotion = pd.DataFrame(data=table[0:,0:],columns=['sub','id','emotion'])
@@ -187,7 +185,7 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 				if resizedFlag == 1:
 					img = cv2.resize(img, (col,row))
 
-				if i <= (table_emotion.shape[0]-1):
+				if i > (table_emotion.shape[0]-1):
 					img = augment_image(img, cutStyle, row, col, 4)
 
 				writeFolder = outputDir+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"."+str(i)+"/"
