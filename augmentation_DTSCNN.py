@@ -8,7 +8,7 @@ from list_databases import load_db
 # data augmentation and sampling as done in the DTSCNN paper
 ###
 
-root_db_path = "/home/mihag/Documents/ME_data/"
+root_db_path = "/home/miha/Documents/ME_data/"
 ######################################################
 
 list_dB = ['CASME2_Optical']

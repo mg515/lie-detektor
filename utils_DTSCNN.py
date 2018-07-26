@@ -135,9 +135,7 @@ def Read_Input_Images_DTSCNN(inputDir, listOfIgnoredSamples, dB, resizedFlag, ta
 
 def augment_image(image, style, row, col, cutSize):
 
-	if style==0:
-		return image
-	elif style==1: return cv2.resize(image[cutSize:row,:], (col,row)) # cut from top
+	if style==1: return cv2.resize(image[cutSize:row,:], (col,row)) # cut from top
 	elif style==2: return cv2.resize(image[0:(row-cutSize),:], (col,row)) # cut from bottom
 	elif style==3: return cv2.resize(image[:,0:(col-cutSize)], (col,row)) # cut from right
 	elif style==4: return cv2.resize(image[:,cutSize:col], (col,row)) # cut from left
@@ -153,6 +151,8 @@ def augment_image(image, style, row, col, cutSize):
 
 
 def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, w):
+	import ipdb
+	ipdb.set_trace()
 
 	for emotion in ['positive', 'negative', 'surprise', 'others']:
 		table_emotion = pd.DataFrame(data=table[0:,0:],columns=['sub','id','emotion'])
@@ -160,7 +160,14 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 
 		for i in range(numSamples):
 			print(emotion+"_"+str(i))
-			random_pick = table_emotion.sample(n=1)
+			# first we ensure that every original video is processed, then we start sampling randomly until we have enough
+			if i <= (table_emotion.shape[0]-1):
+				random_pick = table_emotion.iloc[[i]] # not so random
+			else:
+				random_pick = table_emotion.sample(n=1) # very random
+				cutStyle = randint(1,8)
+
+
 			path = db_images+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"/"
 
 			imgList = readinput(path)
@@ -173,18 +180,15 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 				img = cv2.imread(imgList[0])
 				[row,col,_l] = img.shape
 
-			cutStyle = randint(0,8)
 			for var in range(numFrame):
 				img = cv2.imread(imgList[var])
-					
 				[_,_,dim] = img.shape
-					
-				#img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 				if resizedFlag == 1:
 					img = cv2.resize(img, (col,row))
 
-				img = augment_image(img, cutStyle, row, col, 4)
+				if i <= (table_emotion.shape[0]-1):
+					img = augment_image(img, cutStyle, row, col, 4)
 
 				writeFolder = outputDir+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"."+str(i)+"/"
 				outputPath = writeFolder + imgList[var].split('/')[-1]
