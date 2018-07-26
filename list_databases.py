@@ -207,7 +207,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		data_dim = r * w
 		channel = 3
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
 
