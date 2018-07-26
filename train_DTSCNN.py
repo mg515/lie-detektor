@@ -143,7 +143,6 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		#############################################
 		
 		Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
-		ipdb.set_trace()
 		############### check gpu resources ####################
 		gpu_observer()
 		########################################################
@@ -157,62 +156,18 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 
 		else:
-			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=1, shuffle=True, callbacks=[history,stopping])
+			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
+
 
 		print(".record f1 and loss")
 		# record f1 and loss
 		record_loss_accuracy(db_home, train_id, dB, history)
 
-		print(".save vgg weights")
-		# save vgg weights
-		model = record_weights(vgg_model, spatial_weights_name, sub, flag)
-
-		print(".spatial encoding")
-		# Spatial Encoding
-		output = model.predict(X, batch_size = batch_size)
-
-		# concatenate features for temporal enrichment
-		if channel_flag == 3:
-			output = np.concatenate((output, output_strain), axis=1)
-		elif channel_flag == 4:
-			output = np.concatenate((output, output_strain, output_gray), axis=1)
-
-		features = output.reshape(int(Train_X.shape[0]), timesteps_TIM, output.shape[1])
 		
-		print("Beginning temporal training.")
-
-
-
-		# Temporal Training
-		if tensorboard_flag == 1:
-			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs, callbacks=[tbCallBack])
-		else:
-			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs)
-
-		print(".save temportal weights")
-		# save temporal weights
-		temporal_model = record_weights(temporal_model, temporal_weights_name, sub, 't') # let the flag be t
-
 		print("Beginning testing.")
-		print(".predicting with spatial model")
+		print(".predicting with c3d_model")
 		# Testing
-		output = model.predict(test_X, batch_size = batch_size)
-		if channel_flag == 3 or channel_flag == 4:
-			output_strain = model_strain.predict(Test_X_Strain, batch_size=batch_size)
-			if channel_flag == 4:
-				output_gray = model_gray.predict(Test_X_Gray, batch_size=batch_size)
-
-		# concatenate features for temporal enrichment					
-		if channel_flag == 3:
-			output = np.concatenate((output, output_strain), axis=1)
-		elif channel_flag == 4:
-			output = np.concatenate((output, output_strain, output_gray), axis=1)
-
-		print(".outputing features")
-		features = output.reshape(Test_X.shape[0], timesteps_TIM, output.shape[1])
-
-		print(".predicting with temporal model")
-		predict = temporal_model.predict_classes(features, batch_size=batch_size)
+		predict = c3d_model.predict_classes(Test_X, batch_size = batch_size)
 		##############################################################
 
 		#################### Confusion Matrix Construction #############
@@ -259,21 +214,8 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 
 		################## free memory ####################
 
-		del vgg_model
-		del temporal_model
-		del model
-		del Train_X, Test_X, X, y
-		
-		if channel_flag == 1:
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain
-		elif channel_flag == 2:
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
-		elif channel_flag == 3:
-			del vgg_model_strain, model_strain	
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain
-		elif channel_flag == 4:
-			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
-			del vgg_model_gray, vgg_model_strain, model_gray, model_strain
+		del c3d_model
+		del Train_X, Test_X, Train_Y, Test_Y
 		
 		gc.collect()
 		###################################################
