@@ -366,7 +366,7 @@ def loading_samm_table(root_db_path, dB, objective_flag):
 def read_subjects_todo(db_home, dB, train_id, subjects):
 
 	#/home/mihag/Documents/ME_data/CASME2_Optical/Classification/Result/CASME2_Optical
-	filePath = db_home+'Classification/Result/'+dB+'/predicts_' + str(train_id) +  '.txt'
+	filePath = db_home+'Classification/Result/'+'/predicts_' + str(train_id) +  '.txt'
 
 	if os.path.isfile(filePath):
 		file = open(filePath, 'r')
