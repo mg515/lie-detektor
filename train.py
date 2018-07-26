@@ -420,7 +420,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		print (Test_Y_gt.astype(int))
 
 		print(".writing predicts to file")
-		file = open(db_home+'Classification/'+ 'Result/'+dB+'/predicts_' + str(train_id) +  '.txt', 'a')
+		file = open(db_home+'Classification/'+ 'Result/'+'/predicts_' + str(train_id) +  '.txt', 'a')
 		file.write("predicts_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
 		file.write("actuals_sub_" + str(sub) + "," + (",".join(repr(e) for e in Test_Y_gt.astype(int).astype(list))) + "\n")
 		file.close()
@@ -444,7 +444,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		microAcc = np.trace(tot_mat) / np.sum(tot_mat)
 		[f1,precision,recall] = fpr(tot_mat,n_exp)
 
-		file = open(db_home+'Classification/'+ 'Result/'+dB+'/f1_' + str(train_id) +  '.txt', 'a')
+		file = open(db_home+'Classification/'+ 'Result/'+'/f1_' + str(train_id) +  '.txt', 'a')
 		file.write(str(f1) + "\n")
 		file.close()
 		##################################################################

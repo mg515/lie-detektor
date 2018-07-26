@@ -27,11 +27,6 @@ def Read_Input_Images_DTSCNN(inputDir, augmentationDir, dB, resizedFlag, table, 
 		vid_id = np.empty([0])       
 
 		for vid in sorted([inrfile for inrfile in os.listdir(inputDir+sub)]):
-				
-
-			import ipdb
-			ipdb.set_trace()
-
             
 			path = inputDir + sub + '/' + vid + '/' # image loading path
 			if path in listOfIgnoredSamples:
@@ -181,7 +176,7 @@ def augmentation_casme(db_images, outputDir, table, resizedFlag, r, w):
 			### read the label for each input video
 			#collectinglabel(table, sub[3:], vid, workplace+'Classification/', dB)
 
-
+			cutStyle = randint(0,8)
 			for var in range(numFrame):
 				img = cv2.imread(imgList[var])
 					
@@ -192,7 +187,7 @@ def augmentation_casme(db_images, outputDir, table, resizedFlag, r, w):
 				if resizedFlag == 1:
 					img = cv2.resize(img, (col,row))
 
-				img = augment_image(img, randint(0,8), row, col, 4)
+				img = augment_image(img, cutStyle, row, col, 4)
 
 				writeFolder = outputDir+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"."+str(i)+"/"
 				outputPath = writeFolder + imgList[var].split('/')[-1]
