@@ -1,5 +1,5 @@
-# Microexpressions spotting and recognition using deep-learning architectures.
-Experimentation of deep-learning on the subjects of microexpressions spotting and recognition.
+# Micro-expressions spotting and recognition using deep-learning architectures.
+Experimentation of deep-learning on the subjects of micro-expressions spotting and recognition.
 
 # Original project
 This project first started as a fork of the following repository. Since then it has become its own, but the code backbone is still very much present from the original project, especially the data pre-processing steps. Big thanks to the original authors!
