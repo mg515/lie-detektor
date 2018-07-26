@@ -173,9 +173,6 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 				img = cv2.imread(imgList[0])
 				[row,col,_l] = img.shape
 
-			### read the label for each input video
-			#collectinglabel(table, sub[3:], vid, workplace+'Classification/', dB)
-
 			cutStyle = randint(0,8)
 			for var in range(numFrame):
 				img = cv2.imread(imgList[var])

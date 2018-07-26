@@ -11,7 +11,7 @@ from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LO
 from utilities import record_scores, LossHistory, filter_objective_samples
 from utilities import loading_samm_table, loading_smic_table, loading_casme_table, ignore_casme_samples, ignore_casmergb_samples, loading_casme_objective_table
 from utilities import get_vid_per_subject, get_vid_per_subject_augmented
-from samm_utilitis import get_subfolders_num_crossdb, loading_samm_labels
+#from samm_utilitis import get_subfolders_num_crossdb, loading_samm_labels
 
 
 def load_db(db_path, list_db, spatial_size, objective_flag):
@@ -175,7 +175,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		r = w = spatial_size
 		subjects=26
-		samples = 2000
+		samples = 300*4
 		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
@@ -247,3 +247,38 @@ def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, time
 
 
 	return Train_X, Train_Y, Test_Y, Test_Y, Test_Y_gt, X, y, test_X, test_y
+
+
+def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
+	Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
+	# Rearrange Training labels into a vector of images, breaking sequence
+
+	Train_X = Train_X.reshape(Train_X.shape[0], channel,timesteps_TIM, r, w)
+	Test_X = Test_X.reshape(Test_X.shape[0], channel,timesteps_TIM, r, w)
+
+	# Extend Y labels 10 fold, so that all images have labels
+	#Train_Y_spatial = np.repeat(Train_Y, timesteps_TIM, axis=0)
+	#Test_Y_spatial = np.repeat(Test_Y, timesteps_TIM, axis=0)	
+
+
+	#X = Train_X_spatial.reshape(Train_X_spatial.shape[0], channel, r, w)
+	#y = Train_Y_spatial.reshape(Train_Y_spatial.shape[0], n_exp)
+	#normalized_X = X.astype('float32') / 255.
+
+	#test_X = Test_X_spatial.reshape(Test_X_spatial.shape[0], channel, r, w)
+	#test_y = Test_Y_spatial.reshape(Test_Y_spatial.shape[0], n_exp)
+	#normalized_test_X = test_X.astype('float32') / 255.
+
+
+	print ("Train_X_shape: " + str(np.shape(Train_X)))
+	print ("Train_Y_shape: " + str(np.shape(Train_Y)))
+	print ("Test_X_shape: " + str(np.shape(Test_X)))
+	print ("Test_Y_shape: " + str(np.shape(Test_Y)))	
+	#print ("X_shape: " + str(np.shape(X)))
+	#print ("y_shape: " + str(np.shape(y)))
+	#print ("test_X_shape: " + str(np.shape(test_X)))	
+	#print ("test_y_shape: " + str(np.shape(test_y)))	
+
+
+
+	return Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt

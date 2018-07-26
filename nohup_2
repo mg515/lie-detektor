@@ -1,2 +1,0 @@
-Using Theano backend.
-WARNING (theano.gof.compilelock): Overriding existing lock by dead process '11489' (I am process '11786')

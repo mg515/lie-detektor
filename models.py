@@ -16,14 +16,15 @@ import scipy.io as sio
 from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D
-from keras.layers import LSTM, GlobalAveragePooling2D, GRU, Bidirectional, UpSampling2D
+from keras.layers.convolutional import Convolution3D, MaxPooling3D, ZeroPadding3D
+from keras.layers import LSTM, GlobalAveragePooling2D, GRU, Bidirectional, UpSampling2D, BatchNormalization
 from keras.optimizers import SGD
 import keras.backend as K
 from keras.callbacks import Callback
 from keras.engine.topology import Layer
 
 from labelling import collectinglabel
-from reordering import readinput
+#from reordering import readinput
 from evaluationmatrix import fpr
 
 def VGG_16_4_channels(spatial_size, classes, channels, channel_first=True, weights_path=None):
@@ -240,4 +241,71 @@ def VGG_16_tim(spatial_size, classes, channels, channel_first=True, weights_path
 	model.pop()
 	model.add(Dense(classes, activation='softmax')) # 36
 	
+	return model
+
+
+def DTSCNN_c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
+	model = Sequential()
+	model.add(Convolution3D(filters=16,
+							kernel_size=(3, 3, 3),
+							strides=(2,2,2),
+							padding="same",
+							#activation='relu',
+							name='conv1',
+							input_shape=(channels, temporal_size, spatial_size, spatial_size)))
+
+	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+
+	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
+
+	model.add(BatchNormalization())
+
+	model.add(Convolution3D(filters=32,
+							kernel_size=(3,3,3),
+							strides=(1,1,1),
+							padding="same",
+							#activation='relu',
+							name='conv2'))
+
+	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+
+	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2), padding="valid", name='pool2'))
+
+
+	model.add(BatchNormalization())
+
+	model.add(Convolution3D(filters=64,
+							kernel_size=(3,3,3),
+							strides=(1,1,1),
+							padding="same",
+							#activation='relu',
+							name='conv3'))
+
+	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2), padding="valid", name='pool3'))
+
+	model.add(BatchNormalization())
+
+	model.add(Convolution3D(filters=128,
+							kernel_size=(4,3,3),
+							strides=(1,1,1),
+							padding="same",
+							#activation='relu',
+							name='conv4'))
+
+
+	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+
+	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool4'))
+
+
+	model.add(BatchNormalization())
+
+	model.add(Flatten())
+
+	if weights_path:
+		model.load_weights(weights_path)
+	model.add(Dense(classes, activation='softmax'))
+
+	print(model.summary())
+
 	return model

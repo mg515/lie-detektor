@@ -8,8 +8,10 @@
                                  // the explore tree
 
         // alternative version
-        "archive": true    // this excludes the folder 
+        "archive": true,    // this excludes the folder 
                                 // only from the root of
                                 // your workspace 
+        "notUsedYet": true
+                    
     }
 }

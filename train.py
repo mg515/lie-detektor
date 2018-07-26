@@ -33,13 +33,13 @@ import keras
 from keras.callbacks import EarlyStopping
 
 from labelling import collectinglabel
-from reordering import readinput
+#from reordering import readinput
 from evaluationmatrix import fpr, weighted_average_recall, unweighted_average_recall
 from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LOSO, label_matching, duplicate_channel, read_subjects_todo
 from utilities import loading_smic_table, loading_casme_table, loading_samm_table, ignore_casme_samples, ignore_casmergb_samples # data loading scripts
 from utilities import record_loss_accuracy, record_weights, record_scores, LossHistory # recording scripts
 from utilities import sanity_check_image, gpu_observer
-from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
+#from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder
