@@ -1,5 +1,9 @@
 # Micro-Expression-with-Deep-Learning
-Experimentation of deep learning on the subjects of micro-expression spotting and recognition. 
+Experimentation of deep learning on the subjects of micro-expression spotting and recognition.
+
+# Original project
+This project first started as a fork of the following repository. Since then it has become its own, but the code backbone is still very much present, especially the data pre-processing steps.
+https://github.com/IcedDoggie/Micro-Expression-with-Deep-Learning
 
 # Platforms and dependencies
 Ubuntu 16.04
