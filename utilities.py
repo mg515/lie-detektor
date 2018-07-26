@@ -119,12 +119,12 @@ def get_vid_per_subject(table, listOfIgnoredLabels):
 def get_vid_per_subject_augmented(vidPath):
 
 	subjectFolders = sorted([x for x in os.listdir(vidPath)])
-	numSubfolders = []
+	vidList = []
 	for subf in subjectFolders:
 		path2 = vidPath + subf
-		numSubfolders.append(len(os.listdir(path2)))
-
-	return numSubfolders
+		vidList.append(os.listdir(path2))
+	numSubfolders = [len(x) for x in vidList]
+	return numSubfolders,vidList
 
 
 def get_subfolders_num(path, IgnoredSamples_index):

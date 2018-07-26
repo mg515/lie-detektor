@@ -179,7 +179,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
-		VidPerSubject = get_vid_per_subject_augmented(db_images)
+		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
 		timesteps_TIM = 9
 		data_dim = r * w
@@ -189,7 +189,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
 
-	return r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag
+	return r, w, subjects, samples, n_exp, VidPerSubject, vidList, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag
 
 def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
 	Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)

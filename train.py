@@ -62,7 +62,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 	############## Variables ###################
 	dB = list_dB[0]
-	r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag = load_db(root_db_path, list_dB, spatial_size, objective_flag)
+	r, w, subjects, samples, n_exp, VidPerSubject, vidList, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag = load_db(root_db_path, list_dB, spatial_size, objective_flag)
 
 
 	# avoid confusion
@@ -425,7 +425,8 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 		print(".writing predicts to file")
 		file = open(db_home+'Classification/'+ 'Result/'+'/predicts_' + str(train_id) +  '.txt', 'a')
-		file.write("predicts_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
+		file.write("video_id_sub_" + str(sub) + "," + (",".join(e for e in vidList)) + "\n")
+		file.write("predict_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
 		file.write("actuals_sub_" + str(sub) + "," + (",".join(repr(e) for e in Test_Y_gt.astype(int).astype(list))) + "\n")
 		file.close()
 
