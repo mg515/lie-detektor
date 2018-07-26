@@ -213,7 +213,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
 
 	for sub in subjects_todo:
-		print(".starting subject" + str(sub))
+		print("**** starting subject " + str(sub) + " ****")
 		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/vgg_spatial_'+ str(train_id) + '_' + str(dB) + '_'
 		spatial_weights_name_strain = root_db_path + 'Weights/' + str(train_id) + '/vgg_spatial_strain_'+ str(train_id) + '_' + str(dB) + '_' 

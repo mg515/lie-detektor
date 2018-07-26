@@ -117,7 +117,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
 
 	for sub in subjects_todo:
-		print(".starting subject" + str(sub))
+		print("**** starting subject " + str(sub) + " ****")
 		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 

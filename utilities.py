@@ -508,15 +508,15 @@ def plot_confusion_matrix(cm, classes,
 
 
 def record_loss_accuracy(db_home, train_id, db, history_callback):
-	file_loss = open(db_home + 'Classification/' + 'Result/' + db + '/loss_' + str(train_id) + '.txt', 'a')
+	file_loss = open(db_home + 'Classification/' + 'Result/'  + '/loss_' + str(train_id) + '.txt', 'a')
 	file_loss.write(str(history_callback.losses) + "\n")
 	file_loss.close()
 
-	file_loss = open(db_home + 'Classification/' + 'Result/' + db + '/accuracy_' + str(train_id) + '.txt', 'a')
+	file_loss = open(db_home + 'Classification/' + 'Result/'  + '/accuracy_' + str(train_id) + '.txt', 'a')
 	file_loss.write(str(history_callback.accuracy) + "\n")
 	file_loss.close()	
 
-	file_loss = open(db_home + 'Classification/' + 'Result/'+ db + '/epoch_' + str(train_id) +  '.txt', 'a')
+	file_loss = open(db_home + 'Classification/' + 'Result/' + '/epoch_' + str(train_id) +  '.txt', 'a')
 	file_loss.write(str(history_callback.epochs) + "\n")
 	file_loss.close()		
 
