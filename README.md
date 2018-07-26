@@ -1,17 +1,18 @@
-# Micro-Expression-with-Deep-Learning
-Experimentation of deep learning on the subjects of micro-expression spotting and recognition.
+# Microexpressions spotting and recognition using deep-learning architectures.
+Experimentation of deep-learning on the subjects of microexpressions spotting and recognition.
 
 # Original project
-This project first started as a fork of the following repository. Since then it has become its own, but the code backbone is still very much present, especially the data pre-processing steps.
+This project first started as a fork of the following repository. Since then it has become its own, but the code backbone is still very much present from the original project, especially the data pre-processing steps. Big thanks to the original authors!
+
 https://github.com/IcedDoggie/Micro-Expression-with-Deep-Learning
 
 # Platforms and dependencies
-Ubuntu 16.04
-Python 3.6
-Keras 2.0.6
-Opencv 3.1.0
-pandas 0.19.2
-CuDNN 5110. (Optional but recommended for deep learning)
+* Ubuntu 18.04
+* Python 3.6
+* Keras 2.2
+* Theano 1.0.2 / TensorFlow 1.8.0
+* Opencv 3.1.0
+* CUDA 9.0 + CuDNN 5110
 
 
 # Download files from this url
