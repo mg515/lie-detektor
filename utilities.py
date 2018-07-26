@@ -231,10 +231,10 @@ def duplicate_channel(X):
 	return X
 
 def record_scores(workplace, dB, ct, sub, order, tot_mat, n_exp, subjects):
-	if not os.path.exists(workplace+'Classification/'+'Result/'+dB+'/'):
-		os.mkdir(workplace+'Classification/'+ 'Result/'+dB+'/')
+	if not os.path.exists(workplace+'Classification/'+'Result/'+'/'):
+		os.mkdir(workplace+'Classification/'+ 'Result/'+'/')
 		
-	with open(workplace+'Classification/'+ 'Result/'+dB+'/sub_CT.txt','a') as csvfile:
+	with open(workplace+'Classification/'+ 'Result/'+'/sub_CT.txt','a') as csvfile:
 			thewriter=csv.writer(csvfile, delimiter=' ')
 			thewriter.writerow('Sub ' + str(sub+1))
 			thewriter=csv.writer(csvfile,dialect=csv.excel_tab)
@@ -250,7 +250,7 @@ def record_scores(workplace, dB, ct, sub, order, tot_mat, n_exp, subjects):
 			print(tot_mat)
 			print("F1-Score: " + str(f1))
 			# save into a .txt file
-			with open(workplace+'Classification/'+ 'Result/'+dB+'/final_CT.txt','w') as csvfile:
+			with open(workplace+'Classification/'+ 'Result/'+'/final_CT.txt','w') as csvfile:
 				thewriter=csv.writer(csvfile,dialect=csv.excel_tab)
 				for row in tot_mat:
 					thewriter.writerow(row)
