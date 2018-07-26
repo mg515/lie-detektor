@@ -152,13 +152,13 @@ def augment_image(image, style, row, col, cutSize):
 
 
 
-def augmentation_casme(db_images, outputDir, table, resizedFlag, r, w):
+def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, w):
 
 	for emotion in ['positive', 'negative', 'surprise', 'others']:
 		table_emotion = pd.DataFrame(data=table[0:,0:],columns=['sub','id','emotion'])
 		table_emotion = table_emotion[table_emotion['emotion']==emotion]
 
-		for i in range(500):
+		for i in range(numSamples):
 			print(emotion+"_"+str(i))
 			random_pick = table_emotion.sample(n=1)
 			path = db_images+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"/"
