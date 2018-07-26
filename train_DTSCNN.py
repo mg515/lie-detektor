@@ -134,6 +134,8 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		############ for tensorboard ###############
 		if tensorboard_flag == 1:
 			cat_path2 = tensorboard_path + str(train_id) +  str(sub) + "c3d/"
+			if os.path.exists(cat_path2):
+				os.rmdir(cat_path2)
 			os.mkdir(cat_path2)
 			tbCallBack2 = keras.callbacks.TensorBoard(log_dir=cat_path2, write_graph=True)
 		#############################################

@@ -39,7 +39,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		data_dim = r * w
 		channel = 1
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
 	elif db_name == 'CASME2_Optical':
@@ -59,7 +59,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		data_dim = r * w
 		channel = 3		
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
 	elif db_name == 'SMIC_TIM10':
@@ -76,7 +76,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		data_dim = r * w
 		channel = 3
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")		
 
 	elif db_name == 'SAMM_Optical':
@@ -94,7 +94,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		data_dim = r * w
 		channel = 3
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")		
 
 	elif db_name == 'SAMM_TIM10':
@@ -113,7 +113,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		channel = 3
 		#########################################################	
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")		
 
 	elif db_name == 'SAMM_Strain':
@@ -133,7 +133,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		channel = 3
 		#########################################################	
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")	
 
 
@@ -162,7 +162,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		data_dim = r * w
 		channel = 3
 
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
 		cross_db_flag = 1
@@ -184,28 +184,6 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		timesteps_TIM = 9
 		data_dim = r * w
 		channel = 3		
-
-		if os.path.isdir(db_home + "Classification/" + db_name + "_label.txt" ) == True:
-			os.remove(db_home + "Classification/" + db_name + "_label.txt")
-
-
-	elif db_name == 'CASME_DTSCNN':
-		print("arrived")
-		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
-		listOfIgnoredSamples, IgnoredSamples_index = [[], []]
-
-		r = 224 #165, 282
-		w = 224 #135, 231
-		subjects=26
-		samples = 257
-		n_exp = 4
-
-		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
-		VidPerSubject = get_vid_per_subject(table, [])
-
-		timesteps_TIM = 9
-		data_dim = r * w
-		channel = 3
 
 		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")

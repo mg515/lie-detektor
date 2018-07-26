@@ -287,11 +287,15 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		
 		############ for tensorboard ###############
 		if tensorboard_flag == 1:
-			cat_path = tensorboard_path + str(sub) + "/"
+			cat_path = tensorboard_path + str(train_id) + str(sub) + "/"
+			if os.path.exists(cat_path):
+				os.rmdir(cat_path)
 			os.mkdir(cat_path)
 			tbCallBack = keras.callbacks.TensorBoard(log_dir=cat_path, write_graph=True)
 
-			cat_path2 = tensorboard_path + str(sub) + "spatial/"
+			cat_path2 = tensorboard_path + str(train_id) + str(sub) + "spatial/"
+			if os.path.exists(cat_path2):
+				os.rmdir(cat_path2)
 			os.mkdir(cat_path2)
 			tbCallBack2 = keras.callbacks.TensorBoard(log_dir=cat_path2, write_graph=True)
 		#############################################
