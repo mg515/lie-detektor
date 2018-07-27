@@ -371,7 +371,7 @@ def read_subjects_todo(db_home, dB, train_id, subjects):
 	if os.path.isfile(filePath):
 		file = open(filePath, 'r')
 		lastLine = file.readlines()[-1]
-		lastSubject = int(lastLine.split(',')[0][-1])
+		lastSubject = int(lastLine.split(',')[0].split('_')[-1])
 		subjects_todo = [sub for sub in range(subjects) if sub > lastSubject]
 
 	else: 
