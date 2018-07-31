@@ -53,7 +53,8 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
-		VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
+		#VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
+		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
 		timesteps_TIM = 9
 		data_dim = r * w
@@ -227,7 +228,7 @@ def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, time
 
 
 def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
-	Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
+	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
 	# Rearrange Training labels into a vector of images, breaking sequence
 
 	Train_X = Train_X.reshape(Train_X.shape[0], channel,timesteps_TIM, r, w)
@@ -258,4 +259,4 @@ def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, 
 
 
 
-	return Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt
+	return Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt

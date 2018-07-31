@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.svm import SVC
 from collections import Counter
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
 import scipy.io as sio
 
 
@@ -32,8 +32,6 @@ from reordering import readinput
 from evaluationmatrix import fpr
 import itertools
 from pynvml.pynvml import *
-
-
 
 def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, workplace, spatial_size, channel, objective_flag):
 	r = w = spatial_size	
@@ -193,6 +191,10 @@ def data_loader_with_LOSO(subject, SubjectPerDatabase, y_labels, subjects, class
 	Test_Y = np_utils.to_categorical(y_labels[subject], classes)
 	Test_Y_gt = y_labels[subject]
 
+	# make Train_Y_gt too
+	Train_Y_gt = y_labels[:]
+	Train_Y_gt.pop(subject)
+
 	########### Leave-One-Subject-Out ###############
 	if subject==0:
 		for i in range(1,subjects):
@@ -218,7 +220,32 @@ def data_loader_with_LOSO(subject, SubjectPerDatabase, y_labels, subjects, class
 	Train_Y=np_utils.to_categorical(Train_Y, classes)
 	#############################################################
 
-	return Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt
+	return Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt
+
+
+def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 300):
+	import ipdb
+	ipdb.set_trace()
+
+	return 0
+
+
+
+
+def read_results(path):
+	table = pd.read_csv(path, header = None, names = ['subId', 'vidId', 'predict', 'gt'])
+	table['vidId'] = table['vidId'].apply(lambda x: x.split('.')[0])
+	table['subId'] = table['subId'].apply(lambda x: int(x.split('_')[-1]) + 1)
+
+	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'median', 'gt': 'min'})
+	table_gb['predict'] = (round(table_gb['predict'])).astype(int) 
+
+	accuracy = accuracy_score(table_gb['gt'], table_gb['predict'])
+	cm = confusion_matrix(table_gb['gt'], table_gb['predict'])
+	#f1 = f1_score(table_gb['gt'], table_gb['predict'], average = 'micro')
+
+	return table,accuracy,cm
+
 
 
 def duplicate_channel(X):
