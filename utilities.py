@@ -224,8 +224,7 @@ def data_loader_with_LOSO(subject, SubjectPerDatabase, y_labels, subjects, class
 
 
 def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150):
-	import ipdb
-	ipdb.set_trace()
+	
 	flat_list = [int(item) for sublist in Train_Y_gt for item in sublist]
 
 	izbor = []
