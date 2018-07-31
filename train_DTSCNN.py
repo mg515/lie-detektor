@@ -47,7 +47,7 @@ from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_aut
 
 import ipdb
 
-
+# python main.py --dB 'CASME2_Optical_Aug' --batch_size=5 --spatial_epochs=1 --train_id='casme2_optical_aug_testek' --spatial_size=224 --train='./train_DTSCNN.py' --tensorboard=1
 # nohup python main.py --dB 'CASME2_Optical_Aug' --batch_size=20 --spatial_epochs=100 --temporal_epochs=50 --train_id='casme2_ofOrg_aug' --spatial_size=224 --flag='st' &
 def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
