@@ -223,11 +223,24 @@ def data_loader_with_LOSO(subject, SubjectPerDatabase, y_labels, subjects, class
 	return Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt
 
 
-def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 300):
+def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150):
 	import ipdb
 	ipdb.set_trace()
+	flat_list = [int(item) for sublist in Train_Y_gt for item in sublist]
 
-	return 0
+	izbor = []
+	for em in np.unique(flat_list):
+		indices = [i for i,x in enumerate(flat_list) if x == em]
+		izbor_em = np.random.choice(indices, size = numClips, replace = False)
+		izbor.extend(izbor_em)
+
+
+	izbor = sorted(izbor)
+	Train_X = Train_X[izbor]
+	Train_Y = Train_Y[izbor]
+	Train_Y_gt = Train_Y_gt[izbor]
+
+	return Train_X, Train_Y
 
 
 

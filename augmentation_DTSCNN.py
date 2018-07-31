@@ -17,4 +17,4 @@ spatial_size = 224
 r, w, subjects, samples, n_exp, VidPerSubject, vidList, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag = load_db(root_db_path, list_dB, spatial_size, objective_flag)
 resizedFlag = 0
 
-augmentation_casme(db_images, db_images+"augmentation/", 400, table, resizedFlag, r, w)
+augmentation_casme(db_images, db_images+"augmentation/", 200, table, resizedFlag, r, w)
