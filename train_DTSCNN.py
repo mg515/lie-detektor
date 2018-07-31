@@ -178,7 +178,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 
 		#ipdb.set_trace()
 
-		for i in range(len(vidList)):
+		for i in range(len(vidList[sub])):
 			file.write("sub_" + str(sub) + "," + str(vidList[sub][i]) + "," + str(predict.astype(list)[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
 
 		# file.write("video_id_sub_" + str(sub) + "," + (",".join(repr(e) for e in vidList)) + "\n")
