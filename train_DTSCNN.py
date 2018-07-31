@@ -174,9 +174,13 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 
 		print(".writing predicts to file")
 		file = open(db_home+'Classification/'+ 'Result/'+'/predicts_' + str(train_id) +  '.txt', 'a')
-		file.write("video_id_sub_" + str(sub) + "," + (",".join(repr(e) for e in vidList)) + "\n")
-		file.write("predict_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
-		file.write("actuals_sub_" + str(sub) + "," + (",".join(repr(e) for e in Test_Y_gt.astype(int).astype(list))) + "\n")
+
+		for i in range(len(vidList)):
+			file.write("sub_" + str(sub) + "," + str(vidList[i]) + "," + predict.astype(list)[i] + "," + Test_Y_gt.astype(int).astype(list)[i] + "\n")
+
+		# file.write("video_id_sub_" + str(sub) + "," + (",".join(repr(e) for e in vidList)) + "\n")
+		# file.write("predict_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
+		# file.write("actuals_sub_" + str(sub) + "," + (",".join(repr(e) for e in Test_Y_gt.astype(int).astype(list))) + "\n")
 		file.close()
 
 
