@@ -224,7 +224,7 @@ def data_loader_with_LOSO(subject, SubjectPerDatabase, y_labels, subjects, class
 
 
 def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150):
-	
+
 	flat_list = [int(item) for sublist in Train_Y_gt for item in sublist]
 
 	izbor = []
@@ -237,10 +237,13 @@ def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150):
 	izbor = sorted(izbor)
 	Train_X = Train_X[izbor]
 	Train_Y = Train_Y[izbor]
-	Train_Y_gt = Train_Y_gt[izbor]
+	Train_Y_gt = np.array(flat_list)[izbor]
 
-	return Train_X, Train_Y
+	unique, counts = np.unique(Train_Y_gt, return_counts=True)
+	print(unique)
+	print(counts)
 
+	return Train_X, Train_Y, Train_Y_gt
 
 
 

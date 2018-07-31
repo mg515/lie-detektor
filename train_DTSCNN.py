@@ -35,10 +35,7 @@ from keras import backend as K
 from labelling import collectinglabel
 #from reordering import readinput
 from evaluationmatrix import fpr, weighted_average_recall, unweighted_average_recall
-from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LOSO, label_matching, duplicate_channel, read_subjects_todo, balance_training_sample
-from utilities import loading_smic_table, loading_casme_table, loading_samm_table, ignore_casme_samples, ignore_casmergb_samples # data loading scripts
-from utilities import record_loss_accuracy, record_weights, record_scores, LossHistory # recording scripts
-from utilities import sanity_check_image, gpu_observer
+from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data_c3d
@@ -143,7 +140,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
 
-		Train_X, Train_Y = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150)
+		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 300)
 
 		############### check gpu resources ####################
 		gpu_observer()
