@@ -16,7 +16,6 @@ from random import randint
 
 
 def augment_image(image, style, row, col, cutSize):
-
 	if style==1: return cv2.resize(image[cutSize:row,:], (col,row)) # cut from top
 	elif style==2: return cv2.resize(image[0:(row-cutSize),:], (col,row)) # cut from bottom
 	elif style==3: return cv2.resize(image[:,0:(col-cutSize)], (col,row)) # cut from right
@@ -46,7 +45,6 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 				print("processing original video #" + str(i) + " emotion=" + emotion)
 			else:
 				random_pick = table_emotion.sample(n=1) # very random
-				cutStyle = randint(1,8)
 				print("processing augmented video #" + str(i) + "emotion" + emotion)
 
 
@@ -70,7 +68,7 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 					img = cv2.resize(img, (col,row))
 
 				if i > (table_emotion.shape[0]-1):
-					img = augment_image(img, cutStyle, row, col, 4)
+					img = augment_image(img, randint(1,8), row, col, 4)
 
 				writeFolder = outputDir+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"."+str(i)+"/"
 				outputPath = writeFolder + imgList[var].split('/')[-1]
