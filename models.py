@@ -254,7 +254,7 @@ def DTSCNN_c3d(spatial_size, temporal_size, classes, channels, weights_path=None
 							name='conv1',
 							input_shape=(channels, temporal_size, spatial_size, spatial_size)))
 
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+	model.add(ZeroPadding3D(padding=(1, 1, 1)))
 
 	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
 
@@ -267,7 +267,7 @@ def DTSCNN_c3d(spatial_size, temporal_size, classes, channels, weights_path=None
 							#activation='relu',
 							name='conv2'))
 
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+	model.add(ZeroPadding3D(padding=(1, 1, 1)))
 
 	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2), padding="valid", name='pool2'))
 
