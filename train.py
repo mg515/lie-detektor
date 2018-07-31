@@ -53,7 +53,7 @@ import ipdb
 # nohup python main.py --dB 'CASME2_Optical_Aug' --batch_size=20 --spatial_epochs=100 --temporal_epochs=50 --train_id='casme2_ofOrg_aug' --spatial_size=224 --flag='st' &
 def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatial_size, flag, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	root_db_path = "/home/mihag/Documents/ME_data/"
+	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
