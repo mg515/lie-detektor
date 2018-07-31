@@ -52,7 +52,7 @@ import ipdb
 def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
 #	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	root_db_path = '/home/mihag/Documents/ME_data/"
+	root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -117,7 +117,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 	########### Training Process ############
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
 
-	for sub in subjects_todo:
+	for sub in range(subjects_todo):
 		print("**** starting subject " + str(sub) + " ****")
 		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
@@ -176,8 +176,10 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		print(".writing predicts to file")
 		file = open(db_home+'Classification/'+ 'Result/'+'/predicts_' + str(train_id) +  '.txt', 'a')
 
+		#ipdb.set_trace()
+
 		for i in range(len(vidList)):
-			file.write("sub_" + str(sub) + "," + str(vidList[i]) + "," + str(predict.astype(list)[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
+			file.write("sub_" + str(sub) + "," + str(vidList[sub][i]) + "," + str(predict.astype(list)[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
 
 		# file.write("video_id_sub_" + str(sub) + "," + (",".join(repr(e) for e in vidList)) + "\n")
 		# file.write("predict_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
