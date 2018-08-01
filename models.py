@@ -302,6 +302,8 @@ def DTSCNN_c3d(spatial_size, temporal_size, classes, channels, weights_path=None
 
 	model.add(Flatten())
 
+	model.add(Dropout(0.5))
+
 	if weights_path:
 		model.load_weights(weights_path)
 	model.add(Dense(classes, activation='softmax'))
