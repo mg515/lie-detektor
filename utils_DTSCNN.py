@@ -16,8 +16,7 @@ from random import randint
 from augmentation import *
 
 
-def augment_crop(image, row=224, col=224, cutSize=4):
-	style = randint(1,8)
+def augment_crop(image, style, row=224, col=224, cutSize=4):
 	if style==1: return cv2.resize(image[cutSize:row,:], (col,row)) # cut from top
 	elif style==2: return cv2.resize(image[0:(row-cutSize),:], (col,row)) # cut from bottom
 	elif style==3: return cv2.resize(image[:,0:(col-cutSize)], (col,row)) # cut from right
@@ -30,11 +29,11 @@ def augment_crop(image, row=224, col=224, cutSize=4):
 
 
 
-def augment_image(img):
+def augment_image(img, cropBool,cropStyle, flipBool, rotBool, rotAngle):
 
-	if randint(0,1) == 1: img = augment_crop(img)
-	elif randint(0,1) == 1: img,_ = flip(img)
-	elif randint(0,1) == 1: img = rotation(randint(-8,8), img)
+	if cropBool == 1: img = augment_crop(img, cropStyle)
+	elif flipBool == 1: img,_ = flip(img)
+	elif rotBool == 1: img = rotation(rotAngle, img)
 
 	return img
 
@@ -68,6 +67,11 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 				img = cv2.imread(imgList[0])
 				[row,col,_l] = img.shape
 
+			cropBool = randint(0,1)
+			cropStyle = randint(1,8)
+			flipBool = randint(0,1)
+			rotBool = randint(0,1)
+			rotAngle = randint(-8,8)
 			for var in range(numFrame):
 				img = cv2.imread(imgList[var])
 				[_,_,dim] = img.shape
@@ -76,7 +80,7 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 					img = cv2.resize(img, (col,row))
 
 				if i > (table_emotion.shape[0]-1):
-					img = augment_image(img)
+					img = augment_image(img,cropBool,cropStyle,flipBool,rotBool, rotAngle)
 
 				writeFolder = outputDir+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"."+str(i)+"/"
 				outputPath = writeFolder + imgList[var].split('/')[-1]
