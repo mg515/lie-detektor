@@ -42,7 +42,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
 
-	elif db_name == 'CASME2_Optical' or db_name == 'CASME2_Optical':
+	elif db_name == 'CASME2_Optical' or db_name == 'CASME2_Optical2':
 		print("arrived")
 		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)

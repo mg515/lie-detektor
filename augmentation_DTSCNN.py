@@ -9,7 +9,7 @@ from list_databases import load_db
 ###
 
 #root_db_path = "/home/miha/Documents/ME_data/"
-root_db_path = "/media/ostalo/MihaGarafolj/ME_data"
+root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
 ######################################################
 
 list_dB = ['CASME2_Optical2']
