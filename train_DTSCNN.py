@@ -117,7 +117,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
 		gpu_observer()
-		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
+		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
 
 		############### Reinitialization & weights reset of models ########################

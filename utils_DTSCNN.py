@@ -13,9 +13,11 @@ import glob
 import matplotlib.pyplot as plt
 from reordering import readinput
 from random import randint
+from augmentation import *
 
 
-def augment_image(image, style, row, col, cutSize):
+def augment_crop(image, style, row=224, col=224, cutSize=4):
+	style = randint(1,8)
 	if style==1: return cv2.resize(image[cutSize:row,:], (col,row)) # cut from top
 	elif style==2: return cv2.resize(image[0:(row-cutSize),:], (col,row)) # cut from bottom
 	elif style==3: return cv2.resize(image[:,0:(col-cutSize)], (col,row)) # cut from right
@@ -28,7 +30,13 @@ def augment_image(image, style, row, col, cutSize):
 
 
 
+def augment_image(img):
 
+	if randint(0,1) == 1: img = augment_crop(img)
+	elif randint(0,1) == 1: img,_ = flip(img)
+	elif randint(0,1) == 1: img = rotation(randint(-8,8), img)
+
+	return img
 
 
 def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, w):
@@ -68,7 +76,7 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 					img = cv2.resize(img, (col,row))
 
 				if i > (table_emotion.shape[0]-1):
-					img = augment_image(img, randint(1,8), row, col, 4)
+					img = augment_image(img)
 
 				writeFolder = outputDir+"sub"+str(random_pick['sub'].iloc[0])+"/"+str(random_pick['id'].iloc[0])+"."+str(i)+"/"
 				outputPath = writeFolder + imgList[var].split('/')[-1]
