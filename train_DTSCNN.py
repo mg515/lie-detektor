@@ -49,7 +49,7 @@ import ipdb
 def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
 	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-#	root_db_path = '/home/miha/Documents/ME_data/'
+	#root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -140,7 +140,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
 
-		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 300)
+		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = int(Train_X.shape[0]/n_exp*3/4))
 
 		############### check gpu resources ####################
 		gpu_observer()
@@ -166,7 +166,8 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
-		predict = c3d_model.predict_classes(Test_X, batch_size = batch_size)
+		predict_values = c3d_model.predict(Test_X, batch_size = batch_size)
+		predicts = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
 		#################### Confusion Matrix Construction #############
@@ -175,17 +176,14 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 
 		print(".writing predicts to file")
 		file = open(db_home+'Classification/'+ 'Result/'+'/predicts_' + str(train_id) +  '.txt', 'a')
-
-		#ipdb.set_trace()
-
 		for i in range(len(vidList[sub])):
 			file.write("sub_" + str(sub) + "," + str(vidList[sub][i]) + "," + str(predict.astype(list)[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
-
-		# file.write("video_id_sub_" + str(sub) + "," + (",".join(repr(e) for e in vidList)) + "\n")
-		# file.write("predict_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
-		# file.write("actuals_sub_" + str(sub) + "," + (",".join(repr(e) for e in Test_Y_gt.astype(int).astype(list))) + "\n")
 		file.close()
 
+		file = open(db_home+'Classification/'+ 'Result/'+'/predictedvalues_' + str(train_id) +  '.txt', 'a')
+		for i in range(len(vidList[sub])):
+			file.write("sub_" + str(sub) + "," + str(vidList[sub][i]) + "," + ','.join(str(e) for e in predict_values[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
+		file.close()
 
 		ct = confusion_matrix(Test_Y_gt,predict)
 		# check the order of the CT
