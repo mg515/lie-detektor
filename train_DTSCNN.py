@@ -140,7 +140,11 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
 
+<<<<<<< HEAD
 		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips=300)#, numClips = int(Train_X.shape[0]/n_exp*3/4))
+=======
+		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 450)
+>>>>>>> 089b02aae7d7353c61416c32b19717f66a93cbc3
 
 		############### check gpu resources ####################
 		gpu_observer()
