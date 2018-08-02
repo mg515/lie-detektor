@@ -252,8 +252,8 @@ def read_results(path):
 	table['vidId'] = table['vidId'].apply(lambda x: x.split('.')[0])
 	table['subId'] = table['subId'].apply(lambda x: int(x.split('_')[-1]) + 1)
 
-	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'median', 'gt': 'min'})
-	table_gb['predict'] = (round(table_gb['predict'])).astype(int) 
+	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'first', 'gt': 'min'})
+	#table_gb['predict'] = (round(table_gb['predict'])).astype(int) 
 
 	accuracy = accuracy_score(table_gb['gt'], table_gb['predict'])
 	cm = confusion_matrix(table_gb['gt'], table_gb['predict'])

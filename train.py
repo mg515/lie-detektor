@@ -416,7 +416,8 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 			features = output.reshape(Test_X.shape[0], timesteps_TIM, output.shape[1])
 
 			print(".predicting with temporal model")
-			predict = temporal_model.predict_classes(features, batch_size=batch_size)
+			predict_values = temporal_model.predict(features, batch_size=batch_size)
+			predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
 		#################### Confusion Matrix Construction #############
@@ -425,13 +426,13 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 		print(".writing predicts to file")
 		file = open(db_home+'Classification/'+ 'Result/'+'/predicts_' + str(train_id) +  '.txt', 'a')
-		for i in range(len(vidList)):
+		for i in range(len(vidList[sub])):
 			file.write("sub_" + str(sub) + "," + str(vidList[sub][i]) + "," + str(predict.astype(list)[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
-
-		# file.write("video_id_sub_" + str(sub) + "," + (",".join(repr(e) for e in vidList)) + "\n")
-		# file.write("predict_sub_" + str(sub) + "," + (",".join(repr(e) for e in predict.astype(list))) + "\n")
-		# file.write("actuals_sub_" + str(sub) + "," + (",".join(repr(e) for e in Test_Y_gt.astype(int).astype(list))) + "\n")
 		file.close()
+
+		file = open(db_home+'Classification/'+ 'Result/'+'/predictedvalues_' + str(train_id) +  '.txt', 'a')
+		for i in range(len(vidList[sub])):
+			file.write("sub_" + str(sub) + "," + str(vidList[sub][i]) + "," + ','.join(str(e) for e in predict_values[i]) + "," + str(Test_Y_gt.astype(int).astype(list)[i]) + "\n")
 		file.close()
 
 
