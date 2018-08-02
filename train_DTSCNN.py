@@ -117,7 +117,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
 		gpu_observer()
-		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
+		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
 
 		############### Reinitialization & weights reset of models ########################
@@ -167,7 +167,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		print(".predicting with c3d_model")
 		# Testing
 		predict_values = c3d_model.predict(Test_X, batch_size = batch_size)
-		predicts = np.array([np.argmax(x) for x in predict_values])
+		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
 		#################### Confusion Matrix Construction #############
