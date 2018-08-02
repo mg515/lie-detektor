@@ -16,7 +16,7 @@ from random import randint
 from augmentation import *
 
 
-def augment_crop(image, style, row=224, col=224, cutSize=4):
+def augment_crop(image, row=224, col=224, cutSize=4):
 	style = randint(1,8)
 	if style==1: return cv2.resize(image[cutSize:row,:], (col,row)) # cut from top
 	elif style==2: return cv2.resize(image[0:(row-cutSize),:], (col,row)) # cut from bottom
