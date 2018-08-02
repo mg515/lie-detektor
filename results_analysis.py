@@ -13,6 +13,10 @@ path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Optical_Aug/Classification/Res
 table,acc,cm = read_results(path)
 
 
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Optical_Aug/Classification/Result/predicts_predicts_casme2_optical_withDroupout05.txt'
+table,acc,cm = read_results(path)
+
+
 
 
 
