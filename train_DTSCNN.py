@@ -138,8 +138,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		#############################################
 		
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
-
--		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150)
+		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150)
 
 		############### check gpu resources ####################
 #		gpu_observer()
@@ -161,7 +160,6 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		# record f1 and loss
 		record_loss_accuracy(db_home, train_id, dB, history)
 
-		
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
