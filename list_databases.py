@@ -49,7 +49,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		r = w = spatial_size
 		subjects=26
-		if db_name != 'CASME2_Color_TIM10' and db_name != 'CASME2_Color_TIM20' :
+		if db_name != 'CASME2_Color_TIM10' and db_name != 'CASME2_Color_TIM20' and db_name != 'CASME2_Optical2':
 			samples = 257
 		else: samples = 255
 		n_exp = 4
