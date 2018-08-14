@@ -71,7 +71,7 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 			cropStyle = randint(1,8)
 			flipBool = randint(0,1)
 			rotBool = randint(0,1)
-			rotAngle = randint(1,8)
+			rotAngle = randint(-8,8)
 			for var in range(numFrame):
 				img = cv2.imread(imgList[var])
 				[_,_,dim] = img.shape
