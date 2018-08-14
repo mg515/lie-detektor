@@ -193,20 +193,20 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		cross_db_flag = 1
 		return r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, list_samples, db_home, db_images, cross_db_flag
 
-	elif db_name == 'CASME2_Optical_TIM20_Aug':
+	elif db_name == 'CASME2_Optical2_Aug':
 		print("arrived")
 		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
 
 		r = w = spatial_size
 		subjects=26
-		samples = 500*4
+		samples = 200*4
 		n_exp = 4
 
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
 		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
-		timesteps_TIM = 19
+		timesteps_TIM = 9
 		data_dim = r * w
 		channel = 3		
 
