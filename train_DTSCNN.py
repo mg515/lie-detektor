@@ -27,7 +27,6 @@ from keras.preprocessing.sequence import pad_sequences
 from keras import optimizers
 from keras.applications.vgg16 import VGG16 as keras_vgg16
 from keras.preprocessing.image import ImageDataGenerator, array_to_img
-import keras
 from keras.callbacks import EarlyStopping
 from keras import metrics
 from keras import backend as K
