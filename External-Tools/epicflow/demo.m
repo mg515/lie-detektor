@@ -2,7 +2,7 @@
 
 
 
-path = '/home/miha/Documents/ME_data/CASME2_Color_TIM10/';
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Color_TIM10/';
 path_org = [path, 'CASME2_Color_TIM10']
 sub_folders = rdir(path_org);
 flow_folder = [path, '/flow/'];
