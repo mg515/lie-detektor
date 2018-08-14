@@ -16,7 +16,7 @@ from collections import Counter
 from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
 import scipy.io as sio
 import scipy as sc
-
+import itertools
 
 from keras.models import Sequential, Model
 from keras.layers import LSTM, Dense, TimeDistributed
@@ -31,8 +31,7 @@ from keras.utils import np_utils, plot_model
 from labelling import collectinglabel
 from reordering import readinput
 from evaluationmatrix import fpr
-import itertools
-from pynvml.pynvml import *
+
 
 def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, workplace, spatial_size, channel, objective_flag):
 	r = w = spatial_size	
