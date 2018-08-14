@@ -9,7 +9,7 @@ import pandas as pd
 
 from utilities import Read_Input_Images, get_subfolders_num, data_loader_with_LOSO, label_matching, duplicate_channel
 from utilities import record_scores, LossHistory, filter_objective_samples
-from utilities import loading_samm_table, loading_smic_table, loading_casme_table, ignore_casme_samples, ignore_casmergb_samples, loading_casme_objective_table
+from utilities import loading_samm_table, loading_smic_table, loading_casme_table,loading_casme1_table, ignore_casme_samples, ignore_casmergb_samples, loading_casme_objective_table
 from utilities import get_vid_per_subject, get_vid_per_subject_augmented
 #from samm_utilitis import get_subfolders_num_crossdb, loading_samm_labels
 
@@ -59,6 +59,28 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
 		timesteps_TIM = 9
+		data_dim = r * w
+		channel = 3		
+
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+			os.remove(db_home + "Classification/" + db_name + "_label.txt")
+
+
+	elif db_name == 'CASME1_Color_TIM20':
+		print("arrived")
+		table = loading_casme1_table(db_home + 'CASME1.xls')
+		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
+
+		r = w = spatial_size
+		subjects=19
+		samples = 189
+		n_exp = 4
+
+		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
+		#VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
+		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
+
+		timesteps_TIM = 19
 		data_dim = r * w
 		channel = 3		
 
@@ -185,6 +207,26 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
 		timesteps_TIM = 19
+		data_dim = r * w
+		channel = 3		
+
+		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
+			os.remove(db_home + "Classification/" + db_name + "_label.txt")
+
+	elif db_name == 'CASME12_Color_TIM10':
+		print("arrived")
+		table = loading_casme1_table(db_home + 'CASME12.xls')
+		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
+
+		r = w = spatial_size
+		subjects=45
+		samples = 500*4
+		n_exp = 4
+
+		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
+		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
+
+		timesteps_TIM = 9
 		data_dim = r * w
 		channel = 3		
 

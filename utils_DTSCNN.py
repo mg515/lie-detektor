@@ -43,7 +43,6 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 	for emotion in ['positive', 'negative', 'surprise', 'others']:
 		table_emotion = pd.DataFrame(data=table[0:,0:],columns=['sub','id','emotion'])
 		table_emotion = table_emotion[table_emotion['emotion']==emotion]
-
 		for i in range(numSamples):
 			print(emotion+"_"+str(i))
 			# first we ensure that every original video is processed, then we start sampling randomly until we have enough
@@ -67,11 +66,11 @@ def augmentation_casme(db_images, outputDir, numSamples, table, resizedFlag, r, 
 				img = cv2.imread(imgList[0])
 				[row,col,_l] = img.shape
 
-			cropBool = randint(0,1)
+			cropBool = 1#randint(0,1)
 			cropStyle = randint(1,8)
 			flipBool = randint(0,1)
-			rotBool = randint(0,1)
-			rotAngle = randint(-8,8)
+			rotBool = 0#randint(0,1)
+			rotAngle = 0#randint(-8,8)
 			for var in range(numFrame):
 				img = cv2.imread(imgList[var])
 				[_,_,dim] = img.shape

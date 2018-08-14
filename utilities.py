@@ -15,6 +15,7 @@ from sklearn.svm import SVC
 from collections import Counter
 from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
 import scipy.io as sio
+import scipy as sc
 
 
 from keras.models import Sequential, Model
@@ -249,14 +250,17 @@ def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150):
 
 def read_results(path):
 	table = pd.read_csv(path, header = None, names = ['subId', 'vidId', 'predict', 'gt'])
+	print(table)
 	table['vidId'] = table['vidId'].apply(lambda x: x.split('.')[0])
 	table['subId'] = table['subId'].apply(lambda x: int(x.split('_')[-1]) + 1)
 
-	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'first', 'gt': 'min'})
-	#table_gb['predict'] = (round(table_gb['predict'])).astype(int) 
+	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'first', 'gt': 'first'}).reset_index()
 
-	accuracy = accuracy_score(table_gb['gt'], table_gb['predict'])
-	cm = confusion_matrix(table_gb['gt'], table_gb['predict'])
+	table_mode = table.groupby(['subId', 'vidId']).apply(lambda x: sc.stats.mode(x.predict)[0][0]).reset_index()
+	table_mode.columns.values[2] = 'predict'
+
+	accuracy = accuracy_score(table_gb['gt'], table_mode['predict'])
+	cm = confusion_matrix(table_gb['gt'], table_mode['predict'])
 	#f1 = f1_score(table_gb['gt'], table_gb['predict'], average = 'micro')
 
 	return table,accuracy,cm
@@ -382,6 +386,20 @@ def loading_casme_table(xcel_path):
 	# print(table)
 	return table
 
+
+
+def loading_casme1_table(xcel_path):
+	wb=xlrd.open_workbook(xcel_path)
+	ws=wb.sheet_by_index(0)    
+	colm=ws.col_slice(colx=0,start_rowx=1,end_rowx=None)
+	iD=[str(x.value).zfill(2)[:2] for x in colm]
+	colm=ws.col_slice(colx=1,start_rowx=1,end_rowx=None)
+	vidName=[str(x.value) for x in colm]
+	colm=ws.col_slice(colx=11,start_rowx=1,end_rowx=None)
+	expression=[str(x.value) for x in colm]
+	table=np.transpose(np.array([np.array(iD),np.array(vidName),np.array(expression)],dtype=str))	
+	# print(table)
+	return table
 
 def loading_smic_table(root_db_path, dB):
 	subject, filename, label, num_frames = loading_smic_labels(root_db_path, dB)
