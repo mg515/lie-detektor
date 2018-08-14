@@ -115,7 +115,7 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
-		gpu_observer()
+#		gpu_observer()
 		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
 
@@ -139,10 +139,10 @@ def train_DTSCNN(batch_size, spatial_epochs, train_id, list_dB, spatial_size, ob
 		
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
 
-		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 350)
+-		Train_X, Train_Y, Train_Y_gt = balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150)
 
 		############### check gpu resources ####################
-		gpu_observer()
+#		gpu_observer()
 		########################################################
 
 		print("Beginning training & testing.")
