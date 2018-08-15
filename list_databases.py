@@ -193,7 +193,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		cross_db_flag = 1
 		return r, w, subjects, samples, n_exp, VidPerSubject, timesteps_TIM, data_dim, channel, table, list_samples, db_home, db_images, cross_db_flag
 
-	elif db_name == 'CASME2_Optical2_Aug':
+	elif db_name == 'CASME2_Optical2_Aug' or db_name == 'CASME2_Optical_Aug':
 		print("arrived")
 		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
