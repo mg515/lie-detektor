@@ -23,11 +23,11 @@ for sub in folders_sub:
 		pics = sorted(os.listdir(path + sub + '/' + clip))
 
 		for pic in pics[:-1]:
-			file1.write(path + sub + '/' + clip + '/' + pic + '\n')
+			file1.write('data/' + 'CASME2_Color_TIM10/CASME2_Color_TIM10/' + sub + '/' + clip + '/' + pic + '\n')
 			pic = pic.split('.')[0] + '.flo'
-			file3.write(path + sub + '/' + clip + '/' + pic + '\n')
+			file3.write('data/' + 'CASME2_Color_TIM10/CASME2_Color_TIM10/' + sub + '/' + clip + '/' + pic + '\n')
 		for pic in pics[1:]:
-			file2.write(path + sub + '/' + clip + '/' + pic + '\n')
+			file2.write('data/' + 'CASME2_Color_TIM10/CASME2_Color_TIM10/' + sub + '/' + clip + '/' + pic + '\n')
 
 file1.close()
 file2.close()
