@@ -32,7 +32,7 @@ def augment_crop(image, style, row=224, col=224, cutSize=4):
 def augment_image(img, cropBool,cropStyle, flipBool, rotBool, rotAngle):
 
 	if cropBool == 1: img = augment_crop(img, cropStyle)
-	if flipBool == 1: img,_ = flip(img)
+	#if flipBool == 1: img,_ = flip(img)
 	#if rotBool == 1: img = rotation(rotAngle, img)
 
 	return img
