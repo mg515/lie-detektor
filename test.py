@@ -14,13 +14,13 @@ file1 = open(pathtxt + 'clip1.txt','w')
 file2 = open(pathtxt + 'clip2.txt','w') 
 file3 = open(pathtxt + 'clip_flow.txt','w')
 
-folders_sub = os.listdir(path)
+folders_sub = sorted(os.listdir(path))
 for sub in folders_sub:
 	print(sub)
-	folders_clip = os.listdir(path + sub)
+	folders_clip = sorted(os.listdir(path + sub))
 	for clip in folders_clip:
 		print(clip)
-		pics = os.listdir(path + sub + '/' + clip)
+		pics = sorted(os.listdir(path + sub + '/' + clip))
 
 		for pic in pics[:-1]:
 			file1.write(path + sub + '/' + clip + '/' + pic + '\n')
