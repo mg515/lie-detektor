@@ -4,8 +4,8 @@
 #pathtxt = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Color_TIM10/'
 
 
-path = '/home/mihag/Documents/ME_data/CASME2_Color_TIM10/CASME2_Color_TIM10/'
-pathtxt = '/home/mihag/Documents/ME_data/CASME2_Color_TIM10/'
+path = '/home/mihag/workingDir/flownet2-docker/data/CASME2_Color_TIM10/CASME2_Color_TIM10/'
+pathtxt = '/home/mihag/workingDir/flownet2-docker/data/CASME2_Color_TIM10/'
 
 
 #def create_flow_input_file(path, pathtxt):
