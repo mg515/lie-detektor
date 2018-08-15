@@ -19,4 +19,4 @@ r, w, subjects, samples, n_exp, VidPerSubject, vidList, timesteps_TIM, data_dim,
 resizedFlag = 0
 
 #import ipdb; ipdb.set_trace()
-augmentation_casme(db_images, db_images+"../" + "augmentation/", 200, table, resizedFlag, r, w)
+augmentation_casme(db_images, db_images+"../" + "augmentation/", 700, table, resizedFlag, r, w)
