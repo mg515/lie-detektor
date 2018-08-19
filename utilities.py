@@ -258,8 +258,8 @@ def read_results(path):
 	table_mode = table.groupby(['subId', 'vidId']).apply(lambda x: sc.stats.mode(x.predict)[0][0]).reset_index()
 	table_mode.columns.values[2] = 'predict'
 
-	accuracy = accuracy_score(table_gb['gt'], table_gb['predict'])
-	cm = confusion_matrix(table_gb['gt'], table_gb['predict'])
+	accuracy = accuracy_score(table_gb['gt'], table_mode['predict'])
+	cm = confusion_matrix(table_gb['gt'], table_mode['predict'])
 	#f1 = f1_score(table_gb['gt'], table_gb['predict'], average = 'micro')
 
 	return table,accuracy,cm
