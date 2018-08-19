@@ -246,6 +246,32 @@ def balance_training_sample(Train_X, Train_Y, Train_Y_gt, numClips = 150):
 	return Train_X, Train_Y, Train_Y_gt
 
 
+# upsample the training set, so that all labels are represented in equal size
+def upsample_training_set(Train_X, Train_Y, Train_Y_gt):
+
+	flat_list = [int(item) for sublist in Train_Y_gt for item in sublist]
+	
+	unique, counts = np.unique(flat_list, return_counts=True)
+	izbor = []
+	for em in unique:
+		indices = [i for i,x in enumerate(flat_list) if x == em]
+		izbor_em = np.random.choice(indices, size = np.max(counts) - len(indices), replace = True)
+		izbor.extend(indices)
+		izbor.extend(izbor_em)
+
+
+	izbor = sorted(izbor)
+	Train_X = Train_X[izbor]
+	Train_Y = Train_Y[izbor]
+	Train_Y_gt = np.array(flat_list)[izbor]
+
+	unique, counts = np.unique(Train_Y_gt, return_counts=True)
+	print(unique)
+	print(counts)
+
+	return Train_X, Train_Y, Train_Y_gt
+
+
 
 def read_results(path):
 	table = pd.read_csv(path, header = None, names = ['subId', 'vidId', 'predict', 'gt'])
