@@ -35,4 +35,9 @@ file1.close()
 file2.close()
 file3.close()
 	
-#	return True
+
+
+
+./run-network.sh -n FlowNet2-s \
+-vv data/CASME1_Color_TIM10/clip1.txt data/CASME1_Color_TIM10/clip2.txt data/CASME1_Color_TIM10/clip_flow.txt
+
