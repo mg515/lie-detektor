@@ -226,9 +226,9 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		VidPerSubject, vidList = get_vid_per_subject_augmented(db_images)
 
-		timesteps_TIM = 1
+		timesteps_TIM = 2
 		data_dim = r * w
-		channel = 2
+		channel = 1
 
 		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")
@@ -298,8 +298,6 @@ def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, 
 	Train_X = Train_X.reshape(Train_X.shape[0], channel,timesteps_TIM, r, w).astype('float32') / 255.
 	Test_X = Test_X.reshape(Test_X.shape[0], channel,timesteps_TIM, r, w).astype('float32') / 255.
 
-
-
 	# Extend Y labels 10 fold, so that all images have labels
 	#Train_Y_spatial = np.repeat(Train_Y, timesteps_TIM, axis=0)
 	#Test_Y_spatial = np.repeat(Test_Y, timesteps_TIM, axis=0)	
@@ -329,70 +327,3 @@ def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, 
 
 
 
-
-
-
-def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
-	
-	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
-	# Rearrange Training labels into a vector of images, breaking sequence
-	import cv2
-
-	Train_X_of = np.array([])
-
-	for vid in np.arange(Train_X.shape[0]):
-
-		frame1 = Train_X[vid][0].reshape(r,w,3)
-		frame1 = cv2.cvtColor(frame1,cv2.COLOR_BGR2GRAY)
-		frame2 = Train_X[vid][1].reshape(r,w, 3)
-		frame2 = cv2.cvtColor(frame2,cv2.COLOR_BGR2GRAY)
-
-		of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)		
-		of = (of - np.min(of)) / (np.max(of) - np.min(of))
-
-		Train_X_of = np.append(Train_X_of, of)
-
-	Test_X_of = np.array([])
-	for vid in np.arange(Test_X.shape[0]):
-
-		frame1 = Test_X[vid][0].reshape(r,w,3)
-		frame1 = cv2.cvtColor(frame1,cv2.COLOR_BGR2GRAY)
-		frame2 = Test_X[vid][1].reshape(r,w, 3)
-		frame2 = cv2.cvtColor(frame2,cv2.COLOR_BGR2GRAY)
-
-		of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)		
-		of = (of - np.min(of)) / (np.max(of) - np.min(of))
-
-		Test_X_of = np.append(Test_X_of, of)
-
-	Train_X = Train_X_of.reshape(Train_X.shape[0], channel, r, w).astype('float32')
-	Test_X = Test_X_of.reshape(Test_X.shape[0], channel, r, w).astype('float32')
-
-
-
-	# Extend Y labels 10 fold, so that all images have labels
-	#Train_Y_spatial = np.repeat(Train_Y, timesteps_TIM, axis=0)
-	#Test_Y_spatial = np.repeat(Test_Y, timesteps_TIM, axis=0)	
-
-
-	#X = Train_X_spatial.reshape(Train_X_spatial.shape[0], channel, r, w)
-	#y = Train_Y_spatial.reshape(Train_Y_spatial.shape[0], n_exp)
-	#normalized_X = X.astype('float32') / 255.
-
-	#test_X = Test_X_spatial.reshape(Test_X_spatial.shape[0], channel, r, w)
-	#test_y = Test_Y_spatial.reshape(Test_Y_spatial.shape[0], n_exp)
-	#normalized_test_X = test_X.astype('float32') / 255.
-
-
-	print ("Train_X_shape: " + str(np.shape(Train_X)))
-	print ("Train_Y_shape: " + str(np.shape(Train_Y)))
-	print ("Test_X_shape: " + str(np.shape(Test_X)))
-	print ("Test_Y_shape: " + str(np.shape(Test_Y)))	
-	#print ("X_shape: " + str(np.shape(X)))
-	#print ("y_shape: " + str(np.shape(y)))
-	#print ("test_X_shape: " + str(np.shape(test_X)))	
-	#print ("test_y_shape: " + str(np.shape(test_y)))	
-
-
-
-	return Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt

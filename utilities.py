@@ -12,20 +12,12 @@ import glob
 import matplotlib.pyplot as plt
 
 from sklearn.svm import SVC
-from collections import Counter
 from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
 import scipy.io as sio
 import scipy as sc
 import itertools
 
-from keras.models import Sequential, Model
-from keras.layers import LSTM, Dense, TimeDistributed
-from keras.utils import np_utils
-from keras import metrics
-from keras import backend as K
-from keras.models import model_from_json
 import keras
-import pydot, graphviz
 from keras.utils import np_utils, plot_model
 
 from labelling import collectinglabel
@@ -317,24 +309,6 @@ def upsample_training_set(Train_X, Train_Y, Train_Y_gt):
 
 	return Train_X, Train_Y, Train_Y_gt
 
-
-
-def read_results(path):
-	table = pd.read_csv(path, header = None, names = ['subId', 'vidId', 'predict', 'gt'])
-	print(table)
-	table['vidId'] = table['vidId'].apply(lambda x: x.split('.')[0])
-	table['subId'] = table['subId'].apply(lambda x: int(x.split('_')[-1]) + 1)
-
-	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'first', 'gt': 'first'}).reset_index()
-
-	table_mode = table.groupby(['subId', 'vidId']).apply(lambda x: sc.stats.mode(x.predict)[0][0]).reset_index()
-	table_mode.columns.values[2] = 'predict'
-
-	accuracy = accuracy_score(table_gb['gt'], table_mode['predict'])
-	cm = confusion_matrix(table_gb['gt'], table_mode['predict'])
-	#f1 = f1_score(table_gb['gt'], table_gb['predict'], average = 'micro')
-
-	return table,accuracy,cm
 
 
 
