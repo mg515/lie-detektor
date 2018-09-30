@@ -24,8 +24,7 @@ def optical_flow_2d(subperdb, samples, r, w, timesteps_TIM):
 				of_array.append(of)
 
 			of_vids.append(of_array)
-		import ipdb
-		ipdb.set_trace()
+			
 		subperdb_of.append(of_vids)
 
 	return subperdb_of
