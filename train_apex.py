@@ -40,7 +40,7 @@ from utilities import *
 from list_databases import load_db, restructure_data_c3d
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn
 
-from data_preprocess import optical_flow_2d
+from data_preprocess import optical_flow_2d, optical_flow_2d_old
 
 import ipdb
 
@@ -96,7 +96,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
-	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
+	#SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
 	########### Model Configurations #######################
 	K.set_image_dim_ordering('th')
@@ -142,6 +142,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
 		#Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)
+		Train_X, Test_X = optical_flow_2d_old(Train_X, Test_X, r, w, timesteps_TIM)
 
 
 		############### check gpu resources ####################
