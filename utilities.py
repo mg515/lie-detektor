@@ -94,6 +94,52 @@ def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, wo
 
 	return SubperdB
 
+
+
+def Read_Input_Images_Apex(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, workplace, spatial_size, channel, objective_flag):
+	r = w = spatial_size	
+	SubperdB = []
+
+	# cross-checking parameter
+	subperdb_id = []
+
+	for sub in sorted([infile for infile in os.listdir(inputDir)]):
+		VidperSub = [] 
+		vid_id = np.empty([0])       
+
+		for vid in sorted([inrfile for inrfile in os.listdir(inputDir+sub)]):
+			path = inputDir + sub + '/' + vid + '/' # image loading path
+			if path in listOfIgnoredSamples:
+				continue
+
+			imgList = readinput(path)
+
+			collectinglabel(table, sub[3:], vid.split(".")[0], workplace+'Classification/', dB, objective_flag)
+
+			table_df = pd.DataFrame(table)
+			apexInd = table_df[table_df[0]==sub[-2:]]
+			apexInd = int(apexInd[apexInd[1]==vid][3])
+
+			imgON = cv2.imread(imgList[0])
+			imgApex = cv2.imread(imgList[apexInd])
+					
+			if channel == 1:
+				imgON = cv2.cvtColor(imgON, cv2.COLOR_BGR2GRAY)
+				imgApex = cv2.cvtColor(imgApex, cv2.COLOR_BGR2GRAY)
+
+			if resizedFlag == 1:
+				imgON = cv2.resize(imgON, (spatial_size,spatial_size))
+				imgApex = cv2.resize(imgApex, (spatial_size,spatial_size))
+						
+			FrameperVid = imgON.flatten()
+			FrameperVid = np.vstack((FrameperVid,imgApex.flatten()))
+					
+			VidperSub.append(FrameperVid)       
+		SubperdB.append(VidperSub)	
+
+	return SubperdB
+
+
 def label_matching(workplace, dB, subjects, VidPerSubject):
 	label=np.loadtxt(workplace+'Classification/'+ dB +'_label.txt')
 	labelperSub=[]
@@ -398,7 +444,7 @@ def loading_casme_objective_table(root_db_path, dB):
 
 
 
-def loading_casme_table(xcel_path):
+def loading_casme_table(xcel_path, full = False):
 	wb=xlrd.open_workbook(xcel_path)
 	ws=wb.sheet_by_index(0)    
 	colm=ws.col_slice(colx=0,start_rowx=1,end_rowx=None)
@@ -407,8 +453,17 @@ def loading_casme_table(xcel_path):
 	vidName=[str(x.value) for x in colm]
 	colm=ws.col_slice(colx=6,start_rowx=1,end_rowx=None)
 	expression=[str(x.value) for x in colm]
-	table=np.transpose(np.array([np.array(iD),np.array(vidName),np.array(expression)],dtype=str))	
-	# print(table)
+
+	if full:
+		colm=ws.col_slice(colx=3,start_rowx=1,end_rowx=None)
+		onset=[int(str(x.value)[:-2]) for x in colm]
+		colm=ws.col_slice(colx=4,start_rowx=1,end_rowx=None)
+		apex=[int(str(x.value)[:-2]) for x in colm]
+		table=np.transpose(np.array([np.array(iD),np.array(vidName),np.array(expression),np.array(apex)-np.array(onset)],dtype=str))
+	else:
+		table=np.transpose(np.array([np.array(iD),np.array(vidName),np.array(expression)],dtype=str))
+
+	print(table)
 	return table
 
 

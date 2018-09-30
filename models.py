@@ -311,3 +311,47 @@ def DTSCNN_c3d(spatial_size, temporal_size, classes, channels, weights_path=None
 	#print(model.summary())
 
 	return model
+
+
+
+
+def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
+	model = Sequential()
+	model.add(Conv2D(filters=64,
+							kernel_size=(4, 4),
+							strides=(1,1),
+							padding="same",
+							activation='relu',
+							name='conv1',
+							input_shape=(channels, spatial_size, spatial_size)))
+
+	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+
+	model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool1'))
+
+	#model.add(BatchNormalization())
+
+	model.add(Conv2D(filters=128,
+							kernel_size=(4, 4),
+							strides=(1,1),
+							padding="same",
+							activation='relu',
+							name='conv2'))
+
+	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+
+	model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool2'))
+
+	model.add(Dense(128, activation = 'relu'))
+	model.add(Dense(128, activation = 'relu'))
+	#model.add(Dense(32, activation = 'relu'))
+
+	model.add(Flatten())
+	
+	#model.add(Dropout(0.3))
+	
+	model.add(Dense(classes, activation='softmax'))
+
+	print(model.summary())
+
+	return model
