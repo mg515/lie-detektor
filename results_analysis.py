@@ -2,6 +2,7 @@
 
 from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
 import pandas as pd
+import scipy as sc
 
 def read_results(path):
 	table = pd.read_csv(path, header = None, names = ['subId', 'vidId', 'predict', 'gt'])
