@@ -23,7 +23,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 	print("retrieving data for:" + db_name)
 
 
-	if db_name == 'CASME2_TIM':
+	if db_name == 'CASME2_TIM10':
 		table = loading_casme_table(db_home + 'CASME2_label_Ver_3.xls')
 		listOfIgnoredSamples, IgnoredSamples_index = ignore_casme_samples(db_path, list_db)
 
@@ -33,7 +33,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		n_exp = 4
 		
 		#VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
-		VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
+		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
 		timesteps_TIM = 9
 		data_dim = r * w
@@ -103,6 +103,8 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")		
+
+			
 
 	elif db_name == 'SAMM_Optical':
 		table, table_objective = loading_samm_table(db_path, db_name, objective_flag)
@@ -226,7 +228,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		VidPerSubject, vidList = get_vid_per_subject_augmented(db_images)
 
-		timesteps_TIM = 2
+		timesteps_TIM = 9
 		data_dim = r * w
 		channel = 1
 
@@ -257,7 +259,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 	return r, w, subjects, samples, n_exp, VidPerSubject, vidList, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag
 
 def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
-	Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
+	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
 	# Rearrange Training labels into a vector of images, breaking sequence
 
 	Train_X_spatial = Train_X.reshape(Train_X.shape[0]*timesteps_TIM, r, w, channel)
@@ -292,6 +294,7 @@ def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, time
 
 
 def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
+
 	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
 	# Rearrange Training labels into a vector of images, breaking sequence
 

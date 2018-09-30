@@ -244,7 +244,7 @@ def VGG_16_tim(spatial_size, classes, channels, channel_first=True, weights_path
 	return model
 
 
-def DTSCNN_c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
+def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model = Sequential()
 	model.add(Convolution3D(filters=16,
 							kernel_size=(3, 3, 3),

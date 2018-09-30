@@ -45,8 +45,8 @@ def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, wo
 			imgList = readinput(path)
 
 			# throw first one away, since there is 10 instead of 9 as in strain and OF
-			if dB=='CASME2_TIM10':
-				imgList.pop(0)
+			#if dB=='CASME2_TIM10':
+			#	imgList.pop(0)
 
 			numFrame = len(imgList)
 
