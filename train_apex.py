@@ -47,8 +47,8 @@ import ipdb
 # nohup python main.py --dB 'CASME2_Optical_Aug' --batch_size=20 --spatial_epochs=100 --temporal_epochs=50 --train_id='casme2_ofOrg_aug' --spatial_size=224 --flag='st' &
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	root_db_path = '/home/miha/Documents/ME_data/'
+	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	#root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
