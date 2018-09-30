@@ -43,8 +43,7 @@ from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_aut
 
 import ipdb
 
-# python main.py --dB 'CASME2_Optical_Aug' --batch_size=5 --spatial_epochs=1 --train_id='casme2_optical_aug_testek' --spatial_size=224 --train='./train_DTSCNN.py' --tensorboard=1
-# nohup python main.py --dB 'CASME2_Optical_Aug' --batch_size=20 --spatial_epochs=100 --temporal_epochs=50 --train_id='casme2_ofOrg_aug' --spatial_size=224 --flag='st' &
+#python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
 	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
@@ -162,7 +161,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
-		predict_values = c3d_model.predict(Test_X, batch_size = batch_size)
+		predict_values = apex_model.predict(Test_X, batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
@@ -214,7 +213,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		################## free memory ####################
 
-		del c3d_model
+		del apex_model
 		del Train_X, Test_X, Train_Y, Test_Y
 		
 		gc.collect()
