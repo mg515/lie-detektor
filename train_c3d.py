@@ -125,7 +125,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 
 		############### Reinitialization & weights reset of models ########################
 
-		c3d_model = c3d(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=3)
+		c3d_model = c3d(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
 		c3d_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		#svm_classifier = SVC(kernel='linear', C=1)
