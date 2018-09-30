@@ -96,6 +96,9 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 	
 	#######################################################
 
+	# optical flow
+	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
+
 
 	########### Model Configurations #######################
 	K.set_image_dim_ordering('th')
@@ -140,7 +143,6 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM+1, channel)
 		#Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)
-		Train_X, Test_X = optical_flow_2d(Train_X, Test_X, r, w, timesteps_TIM+1)
 
 		############### check gpu resources ####################
 #		gpu_observer()
