@@ -95,7 +95,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 	print("Loaded Labels into the tray.")
 	
 	#######################################################
-
+	# PREPROCESSING STEPS
 	# optical flow
 	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
