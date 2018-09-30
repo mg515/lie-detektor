@@ -1,6 +1,6 @@
 import argparse
 from train import train
-from train_DTSCNN import train_DTSCNN
+from train_c3d import train_c3d
 from train_apex import train_apex
 #from train_samm_cross import train_samm_cross
 #from test_samm_cross import test_samm_cross
@@ -15,8 +15,8 @@ def main(args):
 	print(args.objective_flag)
 	if args.train == "./train.py":
 		train(args.batch_size, args.spatial_epochs, args.temporal_epochs, args.train_id, args.dB, args.spatial_size, args.flag, args.objective_flag, args.tensorboard)
-	if args.train == "./train_DTSCNN.py":
-		train_DTSCNN(args.batch_size, args.spatial_epochs, args.train_id, args.dB, args.spatial_size, args.objective_flag, args.tensorboard)	
+	if args.train == "./train_c3d.py":
+		train_c3d(args.batch_size, args.spatial_epochs, args.train_id, args.dB, args.spatial_size, args.objective_flag, args.tensorboard)	
 	if args.train == "./train_apex.py":
 		train_apex(args.batch_size, args.spatial_epochs, args.train_id, args.dB, args.spatial_size, args.objective_flag, args.tensorboard)	
 	# train_smic(args.batch_size, args.spatial_epochs, args.temporal_epochs, args.train_id)
