@@ -228,7 +228,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		VidPerSubject, vidList = get_vid_per_subject_augmented(db_images)
 
-		timesteps_TIM = 9
+		timesteps_TIM = 1
 		data_dim = r * w
 		channel = 1
 
@@ -298,8 +298,12 @@ def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, 
 	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
 	# Rearrange Training labels into a vector of images, breaking sequence
 
-	Train_X = Train_X.reshape(Train_X.shape[0], channel,timesteps_TIM, r, w).astype('float32') / 255.
-	Test_X = Test_X.reshape(Test_X.shape[0], channel,timesteps_TIM, r, w).astype('float32') / 255.
+	if timesteps_TIM == 1:
+		Train_X = Train_X.reshape(Train_X.shape[0], channel, r, w).astype('float32') / 255.
+		Test_X = Test_X.reshape(Test_X.shape[0], channel, r, w).astype('float32') / 255.
+	else:
+		Train_X = Train_X.reshape(Train_X.shape[0], channel, timesteps_TIM, r, w).astype('float32') / 255.
+		Test_X = Test_X.reshape(Test_X.shape[0], channel, timesteps_TIM, r, w).astype('float32') / 255.
 
 	# Extend Y labels 10 fold, so that all images have labels
 	#Train_Y_spatial = np.repeat(Train_Y, timesteps_TIM, axis=0)

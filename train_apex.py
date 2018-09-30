@@ -47,8 +47,8 @@ import ipdb
 #python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	#root_db_path = '/home/miha/Documents/ME_data/'
+	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -94,6 +94,9 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	print("Loaded Labels into the tray.")
 	
 	#######################################################
+	# PREPROCESSING STEPS
+	# optical flow
+	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
 	########### Model Configurations #######################
 	K.set_image_dim_ordering('th')
@@ -137,9 +140,8 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		#############################################
 
 
-		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
-		Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)
-		Train_X, Test_X = optical_flow_2d(Train_X, Test_X, r, w, timesteps_TIM)
+		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
+		#Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)
 
 
 		############### check gpu resources ####################
