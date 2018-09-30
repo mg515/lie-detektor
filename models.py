@@ -250,7 +250,7 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 							kernel_size=(3, 5, 5),
 							strides=(1,1,1),
 							padding="same",
-							#activation='relu',
+							activation='relu',
 							name='conv1',
 							input_shape=(channels, temporal_size, spatial_size, spatial_size)))
 
@@ -258,13 +258,13 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
 
-	model.add(BatchNormalization())
+	#model.add(BatchNormalization())
 
 	model.add(Convolution3D(filters=32,
 							kernel_size=(2,4,4),
 							strides=(1,1,1),
 							padding="same",
-							#activation='relu',
+							activation='relu',
 							name='conv2'))
 
 	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
@@ -272,24 +272,24 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool2'))
 
 
-	model.add(BatchNormalization())
+	#model.add(BatchNormalization())
 
 	model.add(Convolution3D(filters=64,
 							kernel_size=(2,4,4),
 							strides=(1,1,1),
 							padding="same",
-							#activation='relu',
+							activation='relu',
 							name='conv3'))
 
 	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
 
-	model.add(BatchNormalization())
+	#model.add(BatchNormalization())
 
 	model.add(Convolution3D(filters=128,
 							kernel_size=(4,3,3),
 							strides=(1,1,1),
 							padding="same",
-							#activation='relu',
+							activation='relu',
 							name='conv4'))
 
 
@@ -298,7 +298,7 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool4'))
 
 
-	model.add(BatchNormalization())
+	#model.add(BatchNormalization())
 
 	model.add(Flatten())
 
