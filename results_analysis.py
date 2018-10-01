@@ -41,8 +41,6 @@ print(f1)
 print(cm)
 
 
-
-
 print('**** apex_flatten_first ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_test_flatten.txt'
 table,acc,f1,cm = read_results(path)
@@ -54,6 +52,15 @@ print(cm)
 
 print('**** apex_sep ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_test_sep.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
+print('**** apex_sep 64 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_sep_64.txt'
 table,acc,f1,cm = read_results(path)
 
 print(acc)
