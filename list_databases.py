@@ -323,6 +323,9 @@ def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, 
 def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
 	
 	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
+
+	size_of = 64
+
 	# Rearrange Training labels into a vector of images, breaking sequence
 	import cv2
 	Train_X_of = np.array([])
@@ -333,7 +336,11 @@ def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w,
 		frame2 = cv2.cvtColor(frame2,cv2.COLOR_BGR2GRAY)
 		of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)		
 		of = (of - np.min(of)) / (np.max(of) - np.min(of))
-		Train_X_of = np.append(Train_X_of, of)
+
+		of_small = np.array([cv2.resize(of[:,:,0], (size_of,size_of)), cv2.resize(of[:,:,1], (size_of,size_of))])
+		of_small = of_small.reshape(size_of, size_of, 2)
+
+		Train_X_of = np.append(Train_X_of, of_small)
 	
 	Test_X_of = np.array([])
 	for vid in np.arange(Test_X.shape[0]):
@@ -343,10 +350,14 @@ def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w,
 		frame2 = cv2.cvtColor(frame2,cv2.COLOR_BGR2GRAY)
 		of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)		
 		of = (of - np.min(of)) / (np.max(of) - np.min(of))
-		Test_X_of = np.append(Test_X_of, of)
+
+		of_small = np.array([cv2.resize(of[:,:,0], (size_of,size_of)), cv2.resize(of[:,:,1], (size_of,size_of))])
+		of_small = of_small.reshape(size_of, size_of, 2)
+
+		Test_X_of = np.append(Test_X_of, of_small)
 	
-	Train_X = Train_X_of.reshape(Train_X.shape[0], channel, r, w).astype('float32')
-	Test_X = Test_X_of.reshape(Test_X.shape[0], channel, r, w).astype('float32')
+	Train_X = Train_X_of.reshape(Train_X.shape[0], channel, size_of, size_of).astype('float32')
+	Test_X = Test_X_of.reshape(Test_X.shape[0], channel, size_of, size_of).astype('float32')
 
 
 	print ("Train_X_shape: " + str(np.shape(Train_X)))
