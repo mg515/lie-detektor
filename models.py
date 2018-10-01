@@ -319,7 +319,7 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model = Sequential()
-	model.add(Conv2D(filters=64,
+	model.add(Conv2D(filters=16,
 							kernel_size=(4, 4),
 							strides=(1,1),
 							padding="same",
@@ -333,7 +333,7 @@ def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	#model.add(BatchNormalization())
 
-	model.add(Conv2D(filters=128,
+	model.add(Conv2D(filters=32,
 							kernel_size=(4, 4),
 							strides=(1,1),
 							padding="same",
@@ -344,13 +344,13 @@ def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool2'))
 
+	model.add(Flatten())
+
 	model.add(Dense(128, activation = 'relu'))
 	model.add(Dense(128, activation = 'relu'))
 	#model.add(Dense(32, activation = 'relu'))
-
-	model.add(Flatten())
 	
-	model.add(Dropout(0.3))
+	#model.add(Dropout(0.3))
 	
 	model.add(Dense(classes, activation='softmax'))
 
