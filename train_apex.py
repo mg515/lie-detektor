@@ -47,8 +47,8 @@ import ipdb
 #python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	#root_db_path = '/home/miha/Documents/ME_data/'
+	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -88,7 +88,6 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	else:
 		SubperdB = Read_Input_Images_Apex(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
         
-
 	labelperSub = label_matching(db_home, dB, subjects, VidPerSubject)
 	print("Loaded Images into the tray.")
 	print("Loaded Labels into the tray.")
@@ -96,6 +95,9 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
+
+	#import ipdb
+	#ipdb.set_trace()
 	#SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
 	########### Model Configurations #######################
@@ -138,7 +140,6 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 			os.mkdir(cat_path2)
 			tbCallBack2 = keras.callbacks.TensorBoard(log_dir=cat_path2, write_graph=True)
 		#############################################
-
 
 		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
 		#Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)

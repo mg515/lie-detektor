@@ -96,8 +96,7 @@ def Read_Input_Images_Apex(inputDir, listOfIgnoredSamples, dB, resizedFlag, tabl
 	subperdb_id = []
 
 	for sub in sorted([infile for infile in os.listdir(inputDir)]):
-		VidperSub = [] 
-		vid_id = np.empty([0])       
+		VidperSub = []     
 
 		for vid in sorted([inrfile for inrfile in os.listdir(inputDir+sub)]):
 			path = inputDir + sub + '/' + vid + '/' # image loading path
