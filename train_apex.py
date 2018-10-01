@@ -110,7 +110,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
 
 	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
+	adam = optimizers.Adam(lr=0.0001, decay=0.000001)
 
 	########################################################
 
