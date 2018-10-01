@@ -52,6 +52,15 @@ print(f1)
 print(cm)
 
 
+print('**** apex_sep ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_test_sep.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
 print('**** c3d_1 ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_c3d_1.txt'
 table,acc,f1,cm = read_results(path)
