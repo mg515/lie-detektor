@@ -23,7 +23,7 @@ def read_results(path):
 	return table,accuracy,f1,cm
 
 
-print('**** apex ****')
+print('**** apex1 ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_1.txt'
 table,acc,f1,cm = read_results(path)
 
@@ -43,8 +43,8 @@ print(cm)
 
 
 
-print('**** apex_test ****')
-path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_test.txt'
+print('**** apex_flatten_first ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_test_flatten.txt'
 table,acc,f1,cm = read_results(path)
 
 print(acc)
