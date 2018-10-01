@@ -43,9 +43,10 @@ def optical_flow_2d_old(Train_X, Test_X, r, w, timesteps_TIM):
 	for vid in np.arange(Test_X.shape[0]):
  		frame1 = Test_X[vid][0,:].reshape(r,w)
  		frame2 = Test_X[vid][1,:].reshape(r,w)
- 		of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)		
+ 		of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)	
  		of = (of - np.min(of)) / (np.max(of) - np.min(of))
  		Test_X_of = np.append(Test_X_of, of)
+		 
 	Train_X_of = Train_X_of.reshape(Train_X.shape[0], 2, r, w).astype('float32')
 	Test_X_of = Test_X_of.reshape(Test_X.shape[0], 2, r, w).astype('float32')
 	return Train_X_of, Test_X_of

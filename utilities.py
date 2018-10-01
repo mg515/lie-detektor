@@ -108,7 +108,6 @@ def Read_Input_Images_Apex(inputDir, listOfIgnoredSamples, dB, resizedFlag, tabl
 
 			collectinglabel(table, sub[3:], vid.split(".")[0], workplace+'Classification/', dB, objective_flag)
 
-			print(vid)
 			table_df = pd.DataFrame(table)
 			apexInd = table_df[table_df[0]==sub[-2:]]
 			apexInd = int(apexInd[apexInd[1]==vid][3])
