@@ -38,7 +38,7 @@ from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data_c3d, restructure_data_apex
-from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn
+from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn, apex_cnn_sep
 
 from data_preprocess import optical_flow_2d, optical_flow_2d_old
 
@@ -47,8 +47,8 @@ import ipdb
 #python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	#root_db_path = '/home/miha/Documents/ME_data/'
+	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -126,7 +126,10 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		############### Reinitialization & weights reset of models ########################
 
-		apex_model = apex_cnn(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
+		import ipdb
+		ipdb.set_trace()
+
+		apex_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
 		apex_model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=[metrics.categorical_accuracy])
 
 		#svm_classifier = SVC(kernel='linear', C=1)
@@ -155,11 +158,16 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		##################### Training & Testing #########################
 
 		print("Beginning c3d training.")
+		import ipdb
+		ipdb.set_trace()
+
 		# Spatial Training
 		if tensorboard_flag == 1:
 			apex_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 		else:
-			apex_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
+			input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,r,w)
+			input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,r,w)
+			apex_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 
 		print(".record f1 and loss")
@@ -169,7 +177,9 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
-		predict_values = apex_model.predict(Test_X, batch_size = batch_size)
+		input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,r,w)
+		input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,r,w)
+		predict_values = apex_model.predict([input_u, input_v], batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
@@ -222,7 +232,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		################## free memory ####################
 
 		del apex_model
-		del Train_X, Test_X, Train_Y, Test_Y
+		del Train_X, Test_X, Train_Y, Test_Y, input_u, input_v
 		
 		gc.collect()
 		###################################################

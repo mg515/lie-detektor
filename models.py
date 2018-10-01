@@ -13,11 +13,11 @@ from collections import Counter
 from sklearn.metrics import confusion_matrix
 import scipy.io as sio
 
-from keras.models import Sequential
+from keras.models import Sequential, Model
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D
 from keras.layers.convolutional import Convolution3D, MaxPooling3D, ZeroPadding3D
-from keras.layers import LSTM, GlobalAveragePooling2D, GRU, Bidirectional, UpSampling2D, BatchNormalization
+from keras.layers import LSTM, GlobalAveragePooling2D, GRU, Bidirectional, UpSampling2D, BatchNormalization, concatenate, Input
 from keras.optimizers import SGD
 import keras.backend as K
 from keras.callbacks import Callback
@@ -356,4 +356,66 @@ def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	print(model.summary())
 
+	return model
+
+
+
+
+
+def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=None):
+
+	a = Input(shape=(1,spatial_size, spatial_size))
+	b = Input(shape=(1,spatial_size, spatial_size))
+
+
+	u = Conv2D(filters=8,
+				kernel_size=(4, 4),
+				strides=(1,1),
+				padding="same",
+				activation='relu',
+				name='conv1_u')(a)
+
+	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool1_u')(u)
+
+	v = Conv2D(filters=8,
+				kernel_size=(4, 4),
+				strides=(1,1),
+				padding="same",
+				activation='relu',
+				name='conv1_v')(b)
+
+	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool1_v')(v)
+
+
+	u = Conv2D(filters=16,
+							kernel_size=(4, 4),
+							strides=(1,1),
+							padding="same",
+							activation='relu',
+							name='conv2_u')(u)
+
+	u = MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding="valid", name='pool2_u')(u)
+	print('1')
+
+	v = Conv2D(filters=16,
+							kernel_size=(4, 4),
+							strides=(1,1),
+							padding="same",
+							activation='relu',
+							name='conv2_v')(v)
+
+	v = MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding="valid", name='pool2_v')(v)
+
+
+	x = concatenate([u,v])
+	x = Flatten()(x)
+
+	x = Dense(512, activation='relu')(x)
+	x = Dense(256, activation='relu')(x)
+
+	x = Dense(classes, activation='softmax')(x)
+
+	model = Model(inputs = [a,b], outputs = x)
+
+	print(model.summary())
 	return model
