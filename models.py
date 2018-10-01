@@ -405,15 +405,20 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 
 	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool2_v')(v)
 
+	u = Flatten()(u)
+	v = Flatten()(v)
 
 	x = concatenate([u,v])
-	x = Flatten()(x)
+
 
 	x = Dense(1024, activation='relu')(x)
-	x = Dense(512, activation='relu')(x)
+	x = Dense(1024, activation='relu')(x)
+
+	x = Dropout(0.5)(x)
+	
 	x = Dense(256, activation='relu')(x)
 	
-	x = Dropout(0.5)(x)
+	
 
 	x = Dense(classes, activation='softmax')(x)
 
