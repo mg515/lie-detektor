@@ -157,12 +157,12 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		print("Beginning c3d training.")
 
 		# Spatial Training
+		input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,r,w)
+		input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,r,w)
 		if tensorboard_flag == 1:
-			apex_model.fit([Train_X[0,:,:], Train_X[1,:,:]], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
+			apex_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 		else:
-			#input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,64,64)
-			#input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,64,64)
-			apex_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
+			apex_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 
 		print(".record f1 and loss")
@@ -172,9 +172,9 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
-		#input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,64,64)
-		#input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,64,64)
-		predict_values = apex_model.predict([Test_X[0,:,:], Test_X[1,:,:]], batch_size = batch_size)
+		input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,r,w)
+		input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,r,w)
+		predict_values = apex_model.predict([input_u, input_v], batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
@@ -227,7 +227,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		################## free memory ####################
 
 		del apex_model
-		del Train_X, Test_X, Train_Y, Test_Y#, input_u, input_v
+		del Train_X, Test_X, Train_Y, Test_Y, input_u, input_v
 		
 		gc.collect()
 		###################################################
