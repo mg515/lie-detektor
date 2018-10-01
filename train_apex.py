@@ -47,8 +47,8 @@ import ipdb
 #python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	root_db_path = '/home/miha/Documents/ME_data/'
+	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	#root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
