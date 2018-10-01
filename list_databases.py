@@ -338,8 +338,6 @@ def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w,
 		of = (of - np.min(of)) / (np.max(of) - np.min(of))
 
 		of_small = np.array([cv2.resize(of[:,:,0], (size_of,size_of)), cv2.resize(of[:,:,1], (size_of,size_of))])
-		of_small = of_small.reshape(size_of, size_of, 2)
-
 		Train_X_of = np.append(Train_X_of, of_small)
 	
 	Test_X_of = np.array([])
@@ -352,12 +350,10 @@ def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w,
 		of = (of - np.min(of)) / (np.max(of) - np.min(of))
 
 		of_small = np.array([cv2.resize(of[:,:,0], (size_of,size_of)), cv2.resize(of[:,:,1], (size_of,size_of))])
-		of_small = of_small.reshape(size_of, size_of, 2)
-
 		Test_X_of = np.append(Test_X_of, of_small)
 	
-	Train_X = Train_X_of.reshape(Train_X.shape[0], channel, size_of, size_of).astype('float32')
-	Test_X = Test_X_of.reshape(Test_X.shape[0], channel, size_of, size_of).astype('float32')
+	Train_X = Train_X_of.reshape(Train_X.shape[0], 2, size_of, size_of).astype('float32')
+	Test_X = Test_X_of.reshape(Test_X.shape[0], 2, size_of, size_of).astype('float32')
 
 
 	print ("Train_X_shape: " + str(np.shape(Train_X)))

@@ -389,7 +389,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 
 	u = Conv2D(filters=16,
 							kernel_size=(4, 4),
-							strides=(2,2),
+							strides=(1,1),
 							padding="same",
 							activation='relu',
 							name='conv2_u')(u)
@@ -398,7 +398,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 
 	v = Conv2D(filters=16,
 							kernel_size=(4, 4),
-							strides=(2,2),
+							strides=(1,1),
 							padding="same",
 							activation='relu',
 							name='conv2_v')(v)
@@ -409,9 +409,9 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 	x = concatenate([u,v])
 	x = Flatten()(x)
 
+	x = Dense(1024, activation='relu')(x)
 	x = Dense(512, activation='relu')(x)
 	x = Dense(256, activation='relu')(x)
-#	x = Dense(256, activation='relu')(x)
 
 	x = Dense(classes, activation='softmax')(x)
 

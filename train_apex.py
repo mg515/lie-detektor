@@ -126,7 +126,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		############### Reinitialization & weights reset of models ########################
 
-		apex_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
+		apex_model = apex_cnn_sep(spatial_size=64, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
 		apex_model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=[metrics.categorical_accuracy])
 
 		#svm_classifier = SVC(kernel='linear', C=1)
@@ -160,8 +160,8 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		if tensorboard_flag == 1:
 			apex_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 		else:
-			input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,r,w)
-			input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,r,w)
+			input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,64,64)
+			input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,64,64)
 			apex_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 
