@@ -375,7 +375,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 				activation='relu',
 				name='conv1_u')(a)
 
-	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool1_u')(u)
+	u = MaxPooling2D(pool_size=(4, 4), strides=(2, 2), padding="valid", name='pool1_u')(u)
 
 	v = Conv2D(filters=8,
 				kernel_size=(4, 4),
@@ -384,7 +384,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 				activation='relu',
 				name='conv1_v')(b)
 
-	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool1_v')(v)
+	v = MaxPooling2D(pool_size=(4, 4), strides=(2, 2), padding="valid", name='pool1_v')(v)
 
 
 	u = Conv2D(filters=16,
@@ -394,7 +394,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 							activation='relu',
 							name='conv2_u')(u)
 
-	u = MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding="valid", name='pool2_u')(u)
+	u = MaxPooling2D(pool_size=(4, 4), strides=(2, 2), padding="valid", name='pool2_u')(u)
 	print('1')
 
 	v = Conv2D(filters=16,
@@ -404,7 +404,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 							activation='relu',
 							name='conv2_v')(v)
 
-	v = MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding="valid", name='pool2_v')(v)
+	v = MaxPooling2D(pool_size=(4, 4), strides=(2, 2), padding="valid", name='pool2_v')(v)
 
 
 	x = concatenate([u,v])
