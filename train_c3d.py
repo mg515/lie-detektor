@@ -89,7 +89,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 	else:
 		SubperdB = Read_Input_Images(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
 
-
+	gc.collect()
 	labelperSub = label_matching(db_home, dB, subjects, VidPerSubject)
 	print("Loaded Images into the tray.")
 	print("Loaded Labels into the tray.")
@@ -99,7 +99,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 	# optical flow
 	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
-
+	gc.collect()
 	########### Model Configurations #######################
 	K.set_image_dim_ordering('th')
 
@@ -122,7 +122,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 #		gpu_observer()
 		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
-
+		gc.collect()
 		############### Reinitialization & weights reset of models ########################
 
 		c3d_model = c3d(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
@@ -155,7 +155,6 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 		# Spatial Training
 		if tensorboard_flag == 1:
 			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
-
 		else:
 			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
