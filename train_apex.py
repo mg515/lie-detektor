@@ -172,8 +172,8 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
-		input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,r,w)
-		input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,r,w)
+		input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,64,64)
+		input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,64,64)
 		predict_values = apex_model.predict([input_u, input_v], batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
