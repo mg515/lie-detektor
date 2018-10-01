@@ -89,6 +89,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		SubperdB = Read_Input_Images_Apex(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
         
 	labelperSub = label_matching(db_home, dB, subjects, VidPerSubject)
+	print(labelperSub)
 	print("Loaded Images into the tray.")
 	print("Loaded Labels into the tray.")
 	

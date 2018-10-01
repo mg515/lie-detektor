@@ -101,12 +101,14 @@ def Read_Input_Images_Apex(inputDir, listOfIgnoredSamples, dB, resizedFlag, tabl
 		for vid in sorted([inrfile for inrfile in os.listdir(inputDir+sub)]):
 			path = inputDir + sub + '/' + vid + '/' # image loading path
 			if path in listOfIgnoredSamples:
+				print(path)
 				continue
 
 			imgList = readinput(path)
 
 			collectinglabel(table, sub[3:], vid.split(".")[0], workplace+'Classification/', dB, objective_flag)
 
+			print(vid)
 			table_df = pd.DataFrame(table)
 			apexInd = table_df[table_df[0]==sub[-2:]]
 			apexInd = int(apexInd[apexInd[1]==vid][3])
