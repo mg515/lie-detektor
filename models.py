@@ -246,7 +246,7 @@ def VGG_16_tim(spatial_size, classes, channels, channel_first=True, weights_path
 
 def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model = Sequential()
-	model.add(Convolution3D(filters=16,
+	model.add(Convolution3D(filters=64,
 							kernel_size=(3, 5, 5),
 							strides=(1,1,1),
 							padding="same",
@@ -260,7 +260,7 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	#model.add(BatchNormalization())
 
-	model.add(Convolution3D(filters=32,
+	model.add(Convolution3D(filters=128,
 							kernel_size=(2,4,4),
 							strides=(1,1,1),
 							padding="same",
@@ -274,31 +274,33 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	#model.add(BatchNormalization())
 
-	model.add(Convolution3D(filters=64,
-							kernel_size=(2,4,4),
-							strides=(1,1,1),
-							padding="same",
-							activation='relu',
-							name='conv3'))
+#	model.add(Convolution3D(filters=64,
+#							kernel_size=(2,4,4),
+#							strides=(1,1,1),
+#							padding="same",
+#							activation='relu',
+#							name='conv3'))
 
-	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
+#	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
 
 	#model.add(BatchNormalization())
 
-	model.add(Convolution3D(filters=128,
-							kernel_size=(4,3,3),
-							strides=(1,1,1),
-							padding="same",
-							activation='relu',
-							name='conv4'))
+	#model.add(Convolution3D(filters=128,
+#							kernel_size=(4,3,3),
+#							strides=(1,1,1),
+#							padding="same",
+#							activation='relu',
+#							name='conv4'))
 
 
 	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
 
-	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool4'))
+#	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool4'))
 
 
 	#model.add(BatchNormalization())
+
+	model.add(Dense(128, activation = 'relu'))
 
 	model.add(Flatten())
 
