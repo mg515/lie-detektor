@@ -348,7 +348,7 @@ def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	model.add(Flatten())
 	
-	#model.add(Dropout(0.3))
+	model.add(Dropout(0.3))
 	
 	model.add(Dense(classes, activation='softmax'))
 
