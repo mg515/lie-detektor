@@ -126,9 +126,6 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		############### Reinitialization & weights reset of models ########################
 
-		import ipdb
-		ipdb.set_trace()
-
 		apex_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
 		apex_model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=[metrics.categorical_accuracy])
 
@@ -158,8 +155,6 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		##################### Training & Testing #########################
 
 		print("Beginning c3d training.")
-		import ipdb
-		ipdb.set_trace()
 
 		# Spatial Training
 		if tensorboard_flag == 1:
