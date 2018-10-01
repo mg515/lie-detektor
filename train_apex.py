@@ -47,8 +47,8 @@ import ipdb
 #python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	#root_db_path = '/home/miha/Documents/ME_data/'
+	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -158,7 +158,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		# Spatial Training
 		if tensorboard_flag == 1:
-			apex_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
+			apex_model.fit([Train_X[0,:,:], Train_X[1,:,:]], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 		else:
 			#input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,64,64)
 			#input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,64,64)
@@ -174,7 +174,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		# Testing
 		#input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,64,64)
 		#input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,64,64)
-		predict_values = apex_model.predict(Test_X, batch_size = batch_size)
+		predict_values = apex_model.predict([Test_X[0,:,:], Test_X[1,:,:]], batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
