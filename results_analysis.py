@@ -51,7 +51,7 @@ print(cm)
 
 
 print('**** apex_sep ****')
-path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_test_sep.txt'
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_sep.txt'
 table,acc,f1,cm = read_results(path)
 
 print(acc)

@@ -19,3 +19,4 @@ scrapper/
 *.dat
 core
 nohup*
+pyflow/

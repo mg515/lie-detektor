@@ -47,8 +47,8 @@ import ipdb
 #python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
 def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
-	#root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
-	root_db_path = '/home/miha/Documents/ME_data/'
+	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
+	#root_db_path = '/home/miha/Documents/ME_data/'
 	tensorboard_path = root_db_path + "tensorboard/"
 	if os.path.isdir(root_db_path + 'Weights/'+ str(train_id) ) == False:
 		os.mkdir(root_db_path + 'Weights/'+ str(train_id) )
@@ -68,7 +68,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	tot_mat = np.zeros((n_exp, n_exp))
 
 	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 5)
 
 	############################################
 
@@ -110,7 +110,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
 
 	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.0001, decay=0.000001)
+	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
 	########################################################
 

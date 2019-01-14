@@ -89,14 +89,14 @@ def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, wo
 
 
 def Read_Input_Images_Apex(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, workplace, spatial_size, channel, objective_flag):
-	r = w = spatial_size	
+	r = w = spatial_size
 	SubperdB = []
 
 	# cross-checking parameter
 	subperdb_id = []
 
 	for sub in sorted([infile for infile in os.listdir(inputDir)]):
-		VidperSub = []     
+		VidperSub = []
 
 		for vid in sorted([inrfile for inrfile in os.listdir(inputDir+sub)]):
 			path = inputDir + sub + '/' + vid + '/' # image loading path
