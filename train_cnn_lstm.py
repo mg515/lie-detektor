@@ -243,7 +243,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 		################## free memory ####################
 
-		del c3d_model
+		#del c3d_model
 		del Train_X, Test_X, Train_Y, Test_Y
 		
 		gc.collect()
