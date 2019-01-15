@@ -162,7 +162,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		else:
 			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
-		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_1').output)
+		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_2').output)
 
 		#model = record_weights(cnn_model, spatial_weights_name, sub, flag)
 		features = model_int.predict([input_u, input_v], batch_size = batch_size)
@@ -244,6 +244,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		################## free memory ####################
 
 		#del c3d_model
+		del cnn_model, temporal_model, model_int
 		del Train_X, Test_X, Train_Y, Test_Y
 		
 		gc.collect()
