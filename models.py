@@ -144,9 +144,9 @@ def VGG_16(spatial_size, classes, channels, channel_first=True, weights_path=Non
 	return model
 
 
-def temporal_module(data_dim, timesteps_TIM, classes, weights_path=None):
+def temporal_module(data_dim, timesteps_TIM, classes, lstm1_size, weights_path=None):
 	model = Sequential()
-	model.add(LSTM(3000, return_sequences=False, input_shape=(timesteps_TIM, data_dim)))
+	model.add(LSTM(lstm1_size, return_sequences=False, input_shape=(timesteps_TIM, data_dim)))
 	#model.add(LSTM(3000, return_sequences=False))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(classes, activation='sigmoid'))
@@ -155,6 +155,8 @@ def temporal_module(data_dim, timesteps_TIM, classes, weights_path=None):
 		model.load_weights(weights_path)
 
 	return model	
+
+	
 
 
 def convolutional_autoencoder(classes, spatial_size, channel_first=True, weights_path=None):
@@ -246,9 +248,9 @@ def VGG_16_tim(spatial_size, classes, channels, channel_first=True, weights_path
 
 def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model = Sequential()
-	model.add(Convolution3D(filters=64,
-							kernel_size=(3, 5, 5),
-							strides=(1,1,1),
+	model.add(Convolution3D(filters=16,
+							kernel_size=(2, 3, 3),
+							strides=(1,2,2),
 							padding="same",
 							activation='relu',
 							name='conv1',
@@ -256,12 +258,12 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
 
-	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
+	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
 
 	#model.add(BatchNormalization())
 
-	model.add(Convolution3D(filters=128,
-							kernel_size=(2,4,4),
+	model.add(Convolution3D(filters=32,
+							kernel_size=(2,3,3),
 							strides=(1,1,1),
 							padding="same",
 							activation='relu',
@@ -269,19 +271,19 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
 
-	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool2'))
+	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool2'))
 
 
 	#model.add(BatchNormalization())
 
-#	model.add(Convolution3D(filters=64,
-#							kernel_size=(2,4,4),
-#							strides=(1,1,1),
-#							padding="same",
-#							activation='relu',
-#							name='conv3'))
+	model.add(Convolution3D(filters=64,
+							kernel_size=(2,3,3),
+							strides=(1,1,1),
+							padding="same",
+							activation='relu',
+							name='conv3'))
 
-#	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
+	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
 
 	#model.add(BatchNormalization())
 
@@ -300,7 +302,7 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 	#model.add(BatchNormalization())
 
-	model.add(Dense(128, activation = 'relu'))
+	model.add(Dense(64, activation = 'relu'))
 
 	model.add(Flatten())
 
@@ -316,53 +318,7 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 
 
 
-
-def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None):
-	model = Sequential()
-	model.add(Conv2D(filters=8,
-							kernel_size=(4, 4),
-							strides=(1,1),
-							padding="same",
-							activation='relu',
-							name='conv1',
-							input_shape=(channels, spatial_size, spatial_size)))
-
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
-
-	model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="valid", name='pool1'))
-
-	#model.add(BatchNormalization())
-
-	model.add(Conv2D(filters=16,
-							kernel_size=(4, 4),
-							strides=(1,1),
-							padding="same",
-							activation='relu',
-							name='conv2'))
-
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
-
-	model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding="valid", name='pool2'))
-
-	model.add(Flatten())
-
-	model.add(Dense(512, activation = 'relu'))
-	model.add(Dense(256, activation = 'relu'))
-	#model.add(Dense(32, activation = 'relu'))
-	
-	#model.add(Dropout(0.3))
-	
-	model.add(Dense(classes, activation='softmax'))
-
-	print(model.summary())
-
-	return model
-
-
-
-
-
-def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=None):
+def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=None, model_freeze = False):
 
 	a = Input(shape=(1,spatial_size, spatial_size))
 	b = Input(shape=(1,spatial_size, spatial_size))
@@ -414,6 +370,8 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 	x = Dense(1024, activation='relu')(x)
 	x = Dense(1024, activation='relu')(x)
 	x = Dropout(0.25)(x)
+
+	#if model_freeze: x = pop(x)
 
 	x = Dense(classes, activation='softmax')(x)
 

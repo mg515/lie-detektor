@@ -270,11 +270,11 @@ def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, time
 	Test_Y_spatial = np.repeat(Test_Y, timesteps_TIM, axis=0)	
 
 
-	X = Train_X_spatial.reshape(Train_X_spatial.shape[0], channel, r, w)
+	X = Train_X_spatial.reshape(Train_X_spatial.shape[0], r, w, channel)
 	y = Train_Y_spatial.reshape(Train_Y_spatial.shape[0], n_exp)
 	normalized_X = X.astype('float32') / 255.
 
-	test_X = Test_X_spatial.reshape(Test_X_spatial.shape[0], channel, r, w)
+	test_X = Test_X_spatial.reshape(Test_X_spatial.shape[0], r, w, channel)
 	test_y = Test_Y_spatial.reshape(Test_Y_spatial.shape[0], n_exp)
 	normalized_test_X = test_X.astype('float32') / 255.
 

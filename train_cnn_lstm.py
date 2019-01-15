@@ -37,15 +37,16 @@ from evaluationmatrix import fpr, weighted_average_recall, unweighted_average_re
 from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
-from list_databases import load_db, restructure_data_c3d, restructure_data_apex
+from list_databases import load_db, restructure_data_c3d, restructure_data
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep
 
-from data_preprocess import optical_flow_2d, optical_flow_2d_old
+from data_preprocess import optical_flow_2d
 
 import ipdb
 
-#python main.py --dB 'CASME2_Cropped' --batch_size=5 --spatial_epochs=30 --train_id='casme2_apex_1' --spatial_size=224 --train='./train_apex.py'
-def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
+# python main.py --dB 'CASME2_Optical_Aug' --batch_size=5 --spatial_epochs=1 --train_id='casme2_optical_aug_testek' --spatial_size=224 --train='./train_c3d.py' --tensorboard=1
+# nohup python main.py --dB 'CASME2_Optical_Aug' --batch_size=20 --spatial_epochs=100 --temporal_epochs=50 --train_id='casme2_ofOrg_aug' --spatial_size=224 --flag='st' &
+def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatial_size, objective_flag, tensorboard):
 	############## Path Preparation ######################
 	root_db_path = "/media/ostalo/MihaGarafolj/ME_data/"
 	#root_db_path = '/home/miha/Documents/ME_data/'
@@ -68,7 +69,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	tot_mat = np.zeros((n_exp, n_exp))
 
 	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 5)
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 
 	############################################
 
@@ -86,21 +87,19 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	if cross_db_flag == 1:
 		SubperdB = Read_Input_Images_SAMM_CASME(db_images, list_samples, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel)
 	else:
-		SubperdB = Read_Input_Images_Apex(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
-        
+		SubperdB = Read_Input_Images(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
+
+	gc.collect()
 	labelperSub = label_matching(db_home, dB, subjects, VidPerSubject)
-	print(labelperSub)
 	print("Loaded Images into the tray.")
 	print("Loaded Labels into the tray.")
 	
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
+	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
-	#import ipdb
-	#ipdb.set_trace()
-	#SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
-
+	gc.collect()
 	########### Model Configurations #######################
 	K.set_image_dim_ordering('th')
 
@@ -121,31 +120,31 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
 #		gpu_observer()
-		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
+		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
-
+		gc.collect()
 		############### Reinitialization & weights reset of models ########################
 
-		apex_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
-		apex_model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=[metrics.categorical_accuracy])
+		cnn_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2, model_freeze=True)
+		cnn_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
-		#svm_classifier = SVC(kernel='linear', C=1)
+		temporal_model = temporal_module(data_dim=1024, timesteps_TIM=timesteps_TIM, lstm1_size=1024, classes=n_exp)
+		temporal_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
+
 		####################################################################################
 		
 		
 		############ for tensorboard ###############
 		if tensorboard_flag == 1:
-			cat_path2 = tensorboard_path + str(train_id) +  str(sub) + "apex/"
+			cat_path2 = tensorboard_path + str(train_id) +  str(sub) + "c3d/"
 			if os.path.exists(cat_path2):
 				os.rmdir(cat_path2)
 			os.mkdir(cat_path2)
 			tbCallBack2 = keras.callbacks.TensorBoard(log_dir=cat_path2, write_graph=True)
 		#############################################
-
-		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_apex(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
+		Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt, X, y, test_X, test_y = restructure_data(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
+		#Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
 		#Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)
-		#Train_X, Test_X = optical_flow_2d_old(Train_X, Test_X, r, w, timesteps_TIM)
-
 
 		############### check gpu resources ####################
 #		gpu_observer()
@@ -154,15 +153,29 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		print("Beginning training & testing.")
 		##################### Training & Testing #########################
 
-		print("Beginning c3d training.")
-
+		print("Beginning spatial training.")
 		# Spatial Training
-		input_u = Train_X[:,0,:,:].reshape(Train_X.shape[0],1,r,w)
-		input_v = Train_X[:,1,:,:].reshape(Train_X.shape[0],1,r,w)
+		input_u = X[:,:,:,0].reshape(X.shape[0], 1, 224,224)
+		input_v = X[:,:,:,1].reshape(X.shape[0], 1, 224,224)
 		if tensorboard_flag == 1:
-			apex_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
+			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 		else:
-			apex_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
+			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
+
+		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_1').output)
+
+		#model = record_weights(cnn_model, spatial_weights_name, sub, flag)
+		features = model_int.predict([input_u, input_v], batch_size = batch_size)
+		features = features.reshape(int(Train_X.shape[0]), timesteps_TIM, features.shape[1])
+
+		print("Beginning temporal training.")
+
+		# Temporal Training
+		if tensorboard_flag == 1:
+			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs, callbacks=[tbCallBack])
+		else:
+			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs)
+
 
 
 		print(".record f1 and loss")
@@ -170,13 +183,17 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 		record_loss_accuracy(db_home, train_id, dB, history)
 
 		print("Beginning testing.")
-		print(".predicting with c3d_model")
+		print(".predicting on test set")
 		# Testing
-		input_u = Test_X[:,0,:,:].reshape(Test_X.shape[0],1,r,w)
-		input_v = Test_X[:,1,:,:].reshape(Test_X.shape[0],1,r,w)
-		predict_values = apex_model.predict([input_u, input_v], batch_size = batch_size)
+		input_u = test_X[:,:,:,0].reshape(test_X.shape[0], 1, 224,224)
+		input_v = test_X[:,:,:,1].reshape(test_X.shape[0], 1, 224,224)
+		features = model_int.predict([input_u, input_v], batch_size = batch_size)
+		features = features.reshape(int(Test_X.shape[0]), timesteps_TIM, features.shape[1])
+
+		predict_values = temporal_model.predict(features, batch_size=batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
+
 
 		#################### Confusion Matrix Construction #############
 		print (predict)
@@ -226,8 +243,8 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		################## free memory ####################
 
-		del apex_model
-		del Train_X, Test_X, Train_Y, Test_Y, input_u, input_v
+		del c3d_model
+		del Train_X, Test_X, Train_Y, Test_Y
 		
 		gc.collect()
 		###################################################

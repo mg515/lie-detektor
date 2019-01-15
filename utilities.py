@@ -24,7 +24,6 @@ from labelling import collectinglabel
 from reordering import readinput
 from evaluationmatrix import fpr
 
-
 def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, workplace, spatial_size, channel, objective_flag):
 	r = w = spatial_size	
 	SubperdB = []
