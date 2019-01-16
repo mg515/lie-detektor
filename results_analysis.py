@@ -24,12 +24,40 @@ def read_results(path):
 
 
 print('**** apex1 ****')
-path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_1.txt'
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_id1.txt'
 table,acc,f1,cm = read_results(path)
 
 print(acc)
 print(f1)
 print(cm)
+
+
+print('**** apex2 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_id2.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
+
+print('**** cnn_lstm_id1 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_cnn_lstm_id1.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+print('**** cnn_lstm_id2 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_cnn_lstm_id2.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
 
 
 print('**** apex_upsampling ****')

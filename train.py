@@ -127,9 +127,6 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		SubperdB = Read_Input_Images(db_images, listOfIgnoredSamples, dB, resizedFlag, table, db_home, spatial_size, channel, objective_flag)
 
 
-	
-	
-
 	labelperSub = label_matching(db_home, dB, subjects, VidPerSubject)
 	print("Loaded Images into the tray.")
 	print("Loaded Labels into the tray.")
@@ -178,10 +175,9 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 	
 	#######################################################
-	import ipdb; ipdb.set_trace()
 
 	########### Model Configurations #######################
-	K.set_image_dim_ordering('th')
+	#K.set_image_dim_ordering('th')
 
 	# config = tf.ConfigProto()
 	# config.gpu_options.allow_growth = True
@@ -214,7 +210,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
-		gpu_observer()
+		#gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/vgg_spatial_'+ str(train_id) + '_' + str(dB) + '_'
 		spatial_weights_name_strain = root_db_path + 'Weights/' + str(train_id) + '/vgg_spatial_strain_'+ str(train_id) + '_' + str(dB) + '_' 
 		spatial_weights_name_gray = root_db_path + 'Weights/' + str(train_id) + '/vgg_spatial_gray_'+ str(train_id) + '_' + str(dB) + '_'
@@ -227,7 +223,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 
 		############### Reinitialization & weights reset of models ########################
 
-		temporal_model = temporal_module(data_dim=data_dim, timesteps_TIM=timesteps_TIM, classes=n_exp)
+		temporal_model = temporal_module(data_dim=data_dim, timesteps_TIM=timesteps_TIM, lstm1_size=3000, classes=n_exp)
 		temporal_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		if channel_flag == 1:
@@ -336,7 +332,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 			_, _, _, _, _, Train_X_Gray, Train_Y_Gray, Test_X_Gray, Test_Y_Gray = restructure_data(sub, SubperdB_gray, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 3)
 
 		############### check gpu resources ####################
-		gpu_observer()
+		#gpu_observer()
 		########################################################
 
 		print("Beginning training & testing.")
@@ -380,6 +376,8 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 				output = np.concatenate((output, output_strain), axis=1)
 			elif channel_flag == 4:
 				output = np.concatenate((output, output_strain, output_gray), axis=1)
+
+			import ipdb; ipdb.set_trace()
 
 			features = output.reshape(int(Train_X.shape[0]), timesteps_TIM, output.shape[1])
 			
