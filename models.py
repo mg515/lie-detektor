@@ -367,13 +367,13 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 	x = concatenate([u,v])
 
 
-	x = Dense(1024, activation='relu')(x)
-	x = Dense(1024, activation='relu')(x)
+	x = Dense(1024, activation='relu', name = 'dense_1')(x)
+	x = Dense(1024, activation='relu', name = 'dense_2')(x)
 	x = Dropout(0.25)(x)
 
 	#if model_freeze: x = pop(x)
 
-	x = Dense(classes, activation='softmax')(x)
+	x = Dense(classes, activation='softmax', name = 'dense_3')(x)
 
 	model = Model(inputs = [a,b], outputs = x)
 
