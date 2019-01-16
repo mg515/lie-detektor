@@ -4,6 +4,12 @@ from train_c3d import train_c3d
 from train_apex import train_apex
 from train_cnn_lstm import train_cnn_lstm
 from train_vgg_lstm import train_vgg_lstm
+
+import tensorflow as tf
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.Session(config=config)
+
 #from train_samm_cross import train_samm_cross
 #from test_samm_cross import test_samm_cross
 #from train_cae_lstm import train_cae_lstm
