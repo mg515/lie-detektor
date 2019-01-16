@@ -38,7 +38,7 @@ from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data_c3d, restructure_data
-from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep
+from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_bigger, apex_cnn_sep
 
 from data_preprocess import optical_flow_2d
 
@@ -94,7 +94,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
-	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
+	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM, compareFrame1 = False)
 
 	gc.collect()
 	########### Model Configurations #######################
@@ -104,7 +104,16 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	# config.gpu_options.allow_growth = True
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
+<<<<<<< HEAD
+=======
+
+	history = LossHistory()
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+>>>>>>> bb24caa95eb7c2d02ec229be841958f7f12f6482
 	########################################################
+
+	history = LossHistory()
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 
 	print("Beginning training process.")
 	########### Training Process ############
@@ -115,16 +124,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		
 		
 		############### Reinitialization of model hyperparameters ########################
-
-		sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
 		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
-
-		history = LossHistory()
-		stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
-
-
-
-#		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
 		gc.collect()
@@ -167,7 +167,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		else:
 			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
-		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_2').output)
+		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_1').output)
 
 		#model = record_weights(cnn_model, spatial_weights_name, sub, flag)
 		features = model_int.predict([input_u, input_v], batch_size = batch_size)
