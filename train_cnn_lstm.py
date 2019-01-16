@@ -68,9 +68,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	# total confusion matrix to be used in the computation of f1 score
 	tot_mat = np.zeros((n_exp, n_exp))
 
-	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
-
 	############################################
 
 	############## Flags ####################
@@ -101,15 +98,12 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 	gc.collect()
 	########### Model Configurations #######################
-	K.set_image_dim_ordering('th')
+	#K.set_image_dim_ordering('th')
 
 	# config = tf.ConfigProto()
 	# config.gpu_options.allow_growth = True
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
-
-	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
 	########################################################
 
@@ -119,6 +113,15 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
+		
+		
+		############### Reinitialization of model hyperparameters ########################
+		sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
+		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
+
+		history = LossHistory()
+		stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+
 #		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
