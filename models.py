@@ -85,7 +85,7 @@ def VGG_16_4_channels(spatial_size, classes, channels, channel_first=True, weigh
 	
 	return model
 
-def VGG_16(spatial_size, classes, channels, channel_first=True, weights_path=None):
+def VGG_16(spatial_size, classes, channels, channel_first=False, weights_path=None):
 	model = Sequential()
 	if channel_first:
 		model.add(ZeroPadding2D((1,1),input_shape=(channels, spatial_size, spatial_size)))
