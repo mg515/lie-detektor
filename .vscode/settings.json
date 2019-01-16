@@ -13,5 +13,6 @@
                                 // your workspace 
         "notUsedYet": true
                     
-    }
+    },
+    "python.linting.pylintEnabled": true
 }

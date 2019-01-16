@@ -38,7 +38,7 @@ from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data_c3d, restructure_data
-from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep
+from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_bigger
 
 from data_preprocess import optical_flow_2d
 
@@ -105,6 +105,8 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
 
+	history = LossHistory()
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 	########################################################
 
 	print("Beginning training process.")
@@ -116,11 +118,8 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		
 		
 		############### Reinitialization of model hyperparameters ########################
-		sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
-		history = LossHistory()
-		stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
 #		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
@@ -128,7 +127,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		gc.collect()
 		############### Reinitialization & weights reset of models ########################
 
-		cnn_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2, model_freeze=True)
+		cnn_model = apex_cnn_bigger(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2, model_freeze=True)
 		cnn_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		temporal_model = temporal_module(data_dim=1024, timesteps_TIM=timesteps_TIM, lstm1_size=1024, classes=n_exp)
