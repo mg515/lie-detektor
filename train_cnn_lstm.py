@@ -104,14 +104,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	# config.gpu_options.allow_growth = True
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
-<<<<<<< HEAD
-=======
-
-	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
->>>>>>> bb24caa95eb7c2d02ec229be841958f7f12f6482
-	########################################################
-
 	history = LossHistory()
 	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 
