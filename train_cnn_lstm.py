@@ -94,7 +94,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
-	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM, compareFrame1 = False)
+	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM, compareFrame1 = True)
 
 	gc.collect()
 	########### Model Configurations #######################
@@ -113,8 +113,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
-		
-		
 		############### Reinitialization of model hyperparameters ########################
 		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
@@ -122,7 +120,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		gc.collect()
 		############### Reinitialization & weights reset of models ########################
 
-		cnn_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2, model_freeze=True)
+		cnn_model = apex_cnn_bigger(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2, model_freeze=True)
 		cnn_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		temporal_model = temporal_module(data_dim=1024, timesteps_TIM=timesteps_TIM, lstm1_size=1024, classes=n_exp)
