@@ -109,6 +109,10 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 	########################################################
 
+	history = LossHistory()
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+
+
 	print("Beginning training process.")
 	########### Training Process ############
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
@@ -120,8 +124,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		############### Reinitialization of model hyperparameters ########################
 
 		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
-
-#		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
 		gc.collect()
@@ -164,7 +166,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		else:
 			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
-		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_2').output)
+		model_int = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_1').output)
 
 		#model = record_weights(cnn_model, spatial_weights_name, sub, flag)
 		features = model_int.predict([input_u, input_v], batch_size = batch_size)
