@@ -40,7 +40,7 @@ from utilities import *
 from list_databases import load_db, restructure_data_c3d, restructure_data_apex
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep
 
-from data_preprocess import optical_flow_2d, optical_flow_2d_old
+from data_preprocess import optical_flow_2d
 
 import ipdb
 
