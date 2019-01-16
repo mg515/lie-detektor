@@ -14,8 +14,8 @@ def optical_flow_2d(subperdb, samples, r, w, timesteps_TIM):
 		for vid in np.arange(len(sub)):
 
 			of_array = []
+			frame1 = sub[vid][0].reshape(r,w)
 			for step in np.arange(timesteps_TIM):
-				frame1 = sub[vid][step].reshape(r,w)
 				frame2 = sub[vid][step+1].reshape(r,w)
 
 				of = cv2.calcOpticalFlowFarneback(frame1,frame2, None, 0.5, 3, 15, 3, 5, 1.2, 0)		
