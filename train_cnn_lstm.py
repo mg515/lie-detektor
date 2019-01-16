@@ -246,6 +246,10 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		#del c3d_model
 		del cnn_model, temporal_model, model_int
 		del Train_X, Test_X, Train_Y, Test_Y
+		K.get_session().close()
+		cfg = K.tf.ConfigProto()
+		cfg.gpu_options.allow_growth = True
+		K.set_session(K.tf.Session(config=cfg))
 		
 		gc.collect()
 		###################################################
