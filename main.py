@@ -3,6 +3,7 @@ from train import train
 from train_c3d import train_c3d
 from train_apex import train_apex
 from train_cnn_lstm import train_cnn_lstm
+from train_vgg_lstm import train_vgg_lstm
 
 import tensorflow as tf
 config = tf.ConfigProto()
@@ -22,6 +23,8 @@ def main(args):
 	print(args.objective_flag)
 	if args.train == "./train.py":
 		train(args.batch_size, args.spatial_epochs, args.temporal_epochs, args.train_id, args.dB, args.spatial_size, args.flag, args.objective_flag, args.tensorboard)
+	if args.train == "./train_vgg_lstm.py":
+		train_vgg_lstm(args.batch_size, args.spatial_epochs, args.temporal_epochs, args.train_id, args.dB, args.spatial_size, args.flag, args.objective_flag, args.tensorboard)
 	if args.train == "./train_cnn_lstm.py":
 		train_cnn_lstm(args.batch_size, args.spatial_epochs, args.temporal_epochs, args.train_id, args.dB, args.spatial_size, args.objective_flag, args.tensorboard)
 	if args.train == "./train_c3d.py":
