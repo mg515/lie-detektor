@@ -379,3 +379,69 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 
 	print(model.summary())
 	return model
+
+
+
+
+def apex_cnn_bigger(spatial_size, temporal_size, classes, channels, weights_path=None, model_freeze = False):
+
+	a = Input(shape=(1,spatial_size, spatial_size))
+	b = Input(shape=(1,spatial_size, spatial_size))
+
+
+	u = Conv2D(filters=32,
+				kernel_size=(4, 4),
+				strides=(2,2),
+				padding="same",
+				activation='relu',
+				name='conv1_u')(a)
+
+	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_u')(u)
+
+	v = Conv2D(filters=32,
+				kernel_size=(4, 4),
+				strides=(2,2),
+				padding="same",
+				activation='relu',
+				name='conv1_v')(b)
+
+	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_v')(v)
+
+
+	u = Conv2D(filters=64,
+							kernel_size=(4, 4),
+							strides=(2,2),
+							padding="same",
+							activation='relu',
+							name='conv2_u')(u)
+
+	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_u')(u)
+
+	v = Conv2D(filters=64,
+							kernel_size=(4, 4),
+							strides=(2,2),
+							padding="same",
+							activation='relu',
+							name='conv2_v')(v)
+
+	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_v')(v)
+
+	u = Flatten()(u)
+	v = Flatten()(v)
+
+	x = concatenate([u,v])
+
+
+	x = Dense(1024, activation='relu', name = 'dense_1')(x)
+	x = Dense(1024, activation='relu', name = 'dense_2')(x)
+	x = Dropout(0.25)(x)
+
+	#if model_freeze: x = pop(x)
+
+	x = Dense(classes, activation='softmax', name = 'dense_3')(x)
+
+	model = Model(inputs = [a,b], outputs = x)
+
+	print(model.summary())
+	return model
+
