@@ -107,6 +107,10 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 	########################################################
 
+	history = LossHistory()
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+
+
 	print("Beginning training process.")
 	########### Training Process ############
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
@@ -118,9 +122,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		############### Reinitialization of model hyperparameters ########################
 		sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
 		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
-
-		history = LossHistory()
-		stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
 
 #		gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
