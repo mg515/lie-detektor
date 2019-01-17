@@ -2,9 +2,9 @@
 % out_rootpath = 'E:/Documents/TIM/TIM/output/';
 
 pkg load image
-
-img_rootpath = '/home/mihag/Documents/CASME2_Cropped/';
-out_rootpath = '/home/mihag/Documents/CASME2_TIM10_Color/';
+cd '/home/mihag/workingDir/lie-detektor/External-Tools/TIM/'
+img_rootpath = '/media/diskD/aligned_SAMM/';
+out_rootpath = '/media/diskD/SAMM_TIM10/';
 
 subject_dir = dir(img_rootpath);
 subject_dir = subject_dir(3:length(subject_dir));
