@@ -38,7 +38,7 @@ from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data_c3d, restructure_data_apex
-from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep
+from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep, apex_cnn_bigger
 
 from data_preprocess import optical_flow_2d
 
@@ -102,15 +102,13 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 	#SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
 	########### Model Configurations #######################
-	K.set_image_dim_ordering('th')
+	#K.set_image_dim_ordering('th')
 
 	# config = tf.ConfigProto()
 	# config.gpu_options.allow_growth = True
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
 
-	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
 	########################################################
 
@@ -123,11 +121,12 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 #		gpu_observer()
 		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
 
+		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
 		############### Reinitialization & weights reset of models ########################
 
-		apex_model = apex_cnn_sep(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
-		apex_model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=[metrics.categorical_accuracy])
+		apex_model = apex_cnn_bigger(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
+		apex_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		#svm_classifier = SVC(kernel='linear', C=1)
 		####################################################################################
@@ -228,6 +227,10 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		del apex_model
 		del Train_X, Test_X, Train_Y, Test_Y, input_u, input_v
+		K.get_session().close()
+		cfg = K.tf.ConfigProto()
+		cfg.gpu_options.allow_growth = True
+		K.set_session(K.tf.Session(config=cfg))
 		
 		gc.collect()
 		###################################################

@@ -113,8 +113,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
-		
-		
 		############### Reinitialization of model hyperparameters ########################
 		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
