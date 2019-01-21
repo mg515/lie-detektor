@@ -135,7 +135,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
-	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
+	#SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
 
 	gc.collect()
 
@@ -185,15 +185,12 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	#######################################################
 
 	########### Model Configurations #######################
-	K.set_image_dim_ordering('th')
+	#K.set_image_dim_ordering('th')
 
 	# config = tf.ConfigProto()
 	# config.gpu_options.allow_growth = True
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
-
-	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 
 	# Different Conditions for Temporal Learning ONLY
 	if train_spatial_flag == 0 and train_temporal_flag == 1 and dB != 'CASME2_Optical':
@@ -217,6 +214,10 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
 
 	for sub in subjects_todo:
+
+		#sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
+		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
+
 		print("**** starting subject " + str(sub) + " ****")
 		#gpu_obgpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/vgg_spatial_'+ str(train_id) + '_' + str(dB) + '_'
@@ -277,7 +278,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 				vgg_model_gray.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		else:
-			vgg_model = VGG_16(spatial_size = spatial_size, classes=n_exp, channels=2, weights_path='VGG_Face_Deep_16.h5')
+			vgg_model = VGG_16(spatial_size = spatial_size, classes=n_exp, channels=3, weights_path='VGG_Face_Deep_16.h5')
 
 			if finetuning_flag == 1:
 				for layer in vgg_model.layers[:33]:
@@ -305,7 +306,8 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		#############################################
 		
 
-		Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt, X, y, test_X, test_y = restructure_data(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
+		#import ipdb; ipdb.set_trace()
+		Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt, X, y, test_X, test_y = restructure_data(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, channel)
 
 		
 		# Special Loading for 4-Channel
@@ -365,7 +367,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 					output_gray = model_gray.predict(Train_X_Gray, batch_size=batch_size)
 
 			else:
-				import ipdb; ipdb.set_trace()
+				#import ipdb; ipdb.set_trace()
 				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 			print(".record f1 and loss")
@@ -374,11 +376,15 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 			print(".save vgg weights")
 			# save vgg weights
-			model = record_weights(vgg_model, spatial_weights_name, sub, flag)
+			# model = record_weights(vgg_model, spatial_weights_name, sub, flag)
 
 			print(".spatial encoding")
 			# Spatial Encoding
-			output = model.predict(X, batch_size = batch_size)
+			model_int = Model(inputs=vgg_model.input, outputs=vgg_model.get_layer('dense_2').output)
+
+			#model = record_weights(cnn_model, spatial_weights_name, sub, flag)
+			features = model_int.predict(X, batch_size = batch_size)
+			features = features.reshape(int(Train_X.shape[0]), timesteps_TIM, features.shape[1])
 
 			# concatenate features for temporal enrichment
 			if channel_flag == 3:
@@ -386,12 +392,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 			elif channel_flag == 4:
 				output = np.concatenate((output, output_strain, output_gray), axis=1)
 
-			features = output.reshape(int(Train_X.shape[0]), timesteps_TIM, output.shape[1])
-			
 			print("Beginning temporal training.")
-
-
-
 			# Temporal Training
 			if tensorboard_flag == 1:
 				temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs, callbacks=[tbCallBack])
@@ -405,7 +406,9 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 			print("Beginning testing.")
 			print(".predicting with spatial model")
 			# Testing
-			output = model.predict(test_X, batch_size = batch_size)
+			features = model_int.predict(test_X, batch_size = batch_size)
+			features = features.reshape(int(Test_X.shape[0]), timesteps_TIM, features.shape[1])
+
 			if channel_flag == 3 or channel_flag == 4:
 				output_strain = model_strain.predict(Test_X_Strain, batch_size=batch_size)
 				if channel_flag == 4:
@@ -418,8 +421,6 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 				output = np.concatenate((output, output_strain, output_gray), axis=1)
 
 			print(".outputing features")
-			features = output.reshape(Test_X.shape[0], timesteps_TIM, output.shape[1])
-
 			print(".predicting with temporal model")
 			predict_values = temporal_model.predict(features, batch_size=batch_size)
 			predict = np.array([np.argmax(x) for x in predict_values])
@@ -489,6 +490,11 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		elif channel_flag == 4:
 			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
 			del vgg_model_gray, vgg_model_strain, model_gray, model_strain
+		
+		K.get_session().close()
+		cfg = K.tf.ConfigProto()
+		cfg.gpu_options.allow_growth = True
+		K.set_session(K.tf.Session(config=cfg))
 		
 		gc.collect()
 		###################################################

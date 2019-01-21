@@ -34,7 +34,8 @@ def face_landmarking(image):
 	# item = data['faces'][0]['face_rectangle']
 	# print(item)	
 	#import ipdb; ipdb.set_trace()
-	rect = data['faces'][0]['face_rectangle']
+	try: rect = data['faces'][0]['face_rectangle']
+	except KeyError: import ipdb; ipdb.set_trace()
 	w, h, left, top = rect['width'], rect['height'], rect['left'], rect['top']
 
 	# image = cv2.imread(image)

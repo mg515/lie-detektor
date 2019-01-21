@@ -153,7 +153,8 @@ def temporal_module(data_dim, timesteps_TIM, classes, lstm1_size, weights_path=N
 
 	if weights_path:
 		model.load_weights(weights_path)
-
+		
+	print(model.summary())
 	return model	
 
 	
@@ -389,7 +390,7 @@ def apex_cnn_bigger(spatial_size, temporal_size, classes, channels, weights_path
 	b = Input(shape=(1,spatial_size, spatial_size))
 
 
-	u = Conv2D(filters=16,
+	u = Conv2D(filters=32,
 				kernel_size=(4, 4),
 				strides=(2,2),
 				padding="same",
@@ -398,7 +399,7 @@ def apex_cnn_bigger(spatial_size, temporal_size, classes, channels, weights_path
 
 	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_u')(u)
 
-	v = Conv2D(filters=16,
+	v = Conv2D(filters=32,
 				kernel_size=(4, 4),
 				strides=(2,2),
 				padding="same",
@@ -408,7 +409,7 @@ def apex_cnn_bigger(spatial_size, temporal_size, classes, channels, weights_path
 	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_v')(v)
 
 
-	u = Conv2D(filters=32,
+	u = Conv2D(filters=64,
 							kernel_size=(4, 4),
 							strides=(2,2),
 							padding="same",
@@ -417,7 +418,7 @@ def apex_cnn_bigger(spatial_size, temporal_size, classes, channels, weights_path
 
 	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_u')(u)
 
-	v = Conv2D(filters=32,
+	v = Conv2D(filters=64,
 							kernel_size=(4, 4),
 							strides=(2,2),
 							padding="same",

@@ -71,7 +71,6 @@ def Read_Input_Images(inputDir, listOfIgnoredSamples, dB, resizedFlag, table, wo
 				if resizedFlag == 1:
 					img = cv2.resize(img, (col,row))
 						
-			
 				if var == 0:
 					FrameperVid = img.flatten()
 				else:
@@ -463,7 +462,7 @@ def loading_smic_table(root_db_path, dB):
 	return table	
 
 
-def loading_samm_table(root_db_path, dB, objective_flag):	
+def loading_samm_table(root_db_path, dB, objective_flag):
 	subject, filename, label, objective_classes = loading_samm_labels(root_db_path, dB, objective_flag)
 	# print("subject:%s filename:%s label:%s objective_classes:%s" %(subject, filename, label, objective_classes))
 	subject = subject.as_matrix()
@@ -720,3 +719,21 @@ def visualize_gradcam():
 		######################################################
 		table_count += 1			
 
+
+
+def read_results(path):
+	table = pd.read_csv(path, header = None, names = ['subId', 'vidId', 'predict', 'gt'])
+	table['vidId'] = table['vidId'].apply(lambda x: x.split('.')[0])
+	table['subId'] = table['subId'].apply(lambda x: int(x.split('_')[-1]) + 1)
+	print(np.max(table['subId']))
+
+	table_gb = table.groupby(['subId', 'vidId']).agg({'predict': 'first', 'gt': 'first'}).reset_index()
+
+	table_mode = table.groupby(['subId', 'vidId']).apply(lambda x: sc.stats.mode(x.predict)[0][0]).reset_index()
+	table_mode.columns.values[2] = 'predict'
+
+	accuracy = accuracy_score(table_gb['gt'], table_mode['predict'])
+	f1 = f1_score(table_gb['gt'], table_gb['predict'], average = 'macro')
+	cm = confusion_matrix(table_gb['gt'], table_mode['predict'])
+
+	return table,accuracy,f1,cm

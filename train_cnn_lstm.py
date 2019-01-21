@@ -60,7 +60,6 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	dB = list_dB[0]
 	r, w, subjects, samples, n_exp, VidPerSubject, vidList, timesteps_TIM, data_dim, channel, table, listOfIgnoredSamples, db_home, db_images, cross_db_flag = load_db(root_db_path, list_dB, spatial_size, objective_flag)
 
-
 	# avoid confusion
 	if cross_db_flag == 1:
 		list_samples = listOfIgnoredSamples
@@ -94,8 +93,8 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
+	#import ipdb; ipdb.set_trace()
 	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM, compareFrame1 = True)
-
 	gc.collect()
 	########### Model Configurations #######################
 	#K.set_image_dim_ordering('th')

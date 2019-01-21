@@ -58,7 +58,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		#VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
 		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
-		timesteps_TIM = 9
+		timesteps_TIM = 10
 		data_dim = r * w
 		channel = 3		
 
@@ -134,10 +134,10 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		subjects = 29
 		samples = 159
 		n_exp = 8
-		VidPerSubject = get_subfolders_num(db_images, IgnoredSamples_index)
-		timesteps_TIM = 10
+		VidPerSubject, vidList = get_vid_per_subject_augmented(db_images)
+		timesteps_TIM = 9
 		data_dim = r * w
-		channel = 3
+		channel = 1
 		#########################################################	
 
 		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
@@ -250,7 +250,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 
 		timesteps_TIM = 9
 		data_dim = r * w
-		channel = 3		
+		channel = 1
 
 		if os.path.exists(db_home + "Classification/" + db_name + "_label.txt" ) == True:
 			os.remove(db_home + "Classification/" + db_name + "_label.txt")

@@ -42,7 +42,6 @@ def collectinglabel(Table, sub, videoName, workplace, db, objective_flag):
 
     # SAMM only case
     elif "SAMM" in db:
-
         counter = 0
         if objective_flag == 0:
             for var in ((Table[0, :, 0])):
@@ -54,13 +53,13 @@ def collectinglabel(Table, sub, videoName, workplace, db, objective_flag):
                         result = 0
                         break
                     elif result == 'Contempt': # positive
-                        result = 1
+                        result = 5
                         break
                     elif result == 'Disgust': # surprise
                         result = 2
                         break
                     elif result == 'Fear': # surprise
-                        result = 3
+                        result = 2
                         break
                     elif result == 'Happiness': # surprise
                         result = 4
@@ -69,10 +68,10 @@ def collectinglabel(Table, sub, videoName, workplace, db, objective_flag):
                         result = 5
                         break
                     elif result == 'Sadness': # surprise
-                        result = 6
+                        result = 2
                         break
                     elif result == 'Surprise': # surprise
-                        result = 7
+                        result = 1
                         break                    
                     # print("found: %s" % (videoName) )
                     # print(result)

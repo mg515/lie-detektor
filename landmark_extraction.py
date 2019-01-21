@@ -158,9 +158,12 @@ for subject in os.listdir(images_path):
 	pathTemp1 = images_path + '/' + subject + '/'
 	for video in os.listdir(pathTemp1):
 		pathTemp2 = pathTemp1 + video + '/'
+		print(pathTemp2)
 		rects = 0
 		rect_flag = 0
 		for item in os.listdir(pathTemp2):
+			#if counter < 159: continue
+			if item == 'SAMM' or item == 'aligned_SAMM': continue
 			#import ipdb; ipdb.set_trace()
 			#import ipdb; ipdb.set_trace()
 			filepath = pathTemp2 + item
@@ -177,7 +180,8 @@ for subject in os.listdir(images_path):
 			# cv2.imwrite('helper.jpg', aligned_image)
 			
 			image = cv2.imread(filepath)
-			ori_h, ori_w = image.shape[0], image.shape[1]
+			try:ori_h, ori_w = image.shape[0], image.shape[1]
+			except AttributeError: import ipdb; ipdb.set_trace()
 			image = cv2.resize(image, (500,338))
 			image = cv2.warpAffine(image, M, (height, width), flags=cv2.INTER_CUBIC)
 			# image = cv2.resize(image, (ori_w, ori_h))
