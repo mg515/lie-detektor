@@ -129,9 +129,9 @@ def VGG_16(spatial_size, classes, channels, channel_first=False, weights_path=No
 	model.add(MaxPooling2D((2,2), strides=(2,2))) # 33
 
 	model.add(Flatten())
-	model.add(Dense(4096, activation='relu', name = 'dense_1')) # 34
+	model.add(Dense(4096, activation='relu', name = 'dense_prvi')) # 34
 	model.add(Dropout(0.5))
-	model.add(Dense(4096, activation='relu', name = 'dense_2')) # 35
+	model.add(Dense(4096, activation='relu', name = 'dense_drugi')) # 35
 	model.add(Dropout(0.5))
 	model.add(Dense(2622, activation='softmax')) # Dropped
 
@@ -153,7 +153,7 @@ def temporal_module(data_dim, timesteps_TIM, classes, lstm1_size, weights_path=N
 
 	if weights_path:
 		model.load_weights(weights_path)
-		
+
 	print(model.summary())
 	return model	
 
@@ -249,83 +249,54 @@ def VGG_16_tim(spatial_size, classes, channels, channel_first=True, weights_path
 
 def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model = Sequential()
-	model.add(Convolution3D(filters=16,
-							kernel_size=(2, 3, 3),
+	model.add(Convolution3D(filters=64,
+							kernel_size=(2, 2, 2),
 							strides=(1,2,2),
 							padding="same",
 							activation='relu',
 							name='conv1',
-							input_shape=(channels, temporal_size, spatial_size, spatial_size)))
+							input_shape=(temporal_size, spatial_size, spatial_size, channels)))
 
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
 
-	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
-
-	#model.add(BatchNormalization())
-
-	model.add(Convolution3D(filters=32,
-							kernel_size=(2,3,3),
-							strides=(1,1,1),
+	model.add(Convolution3D(filters=128,
+							kernel_size=(2,2,2),
+							strides=(1,2,2),
 							padding="same",
 							activation='relu',
 							name='conv2'))
 
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
+	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool2'))
 
-	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool2'))
+	# model.add(Convolution3D(filters=64,
+	# 						kernel_size=(2,3,3),
+	# 						strides=(1,1,1),
+	# 						padding="same",
+	# 						activation='relu',
+	# 						name='conv3'))
 
-
-	#model.add(BatchNormalization())
-
-	model.add(Convolution3D(filters=64,
-							kernel_size=(2,3,3),
-							strides=(1,1,1),
-							padding="same",
-							activation='relu',
-							name='conv3'))
-
-	model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
-
-	#model.add(BatchNormalization())
-
-	#model.add(Convolution3D(filters=128,
-#							kernel_size=(4,3,3),
-#							strides=(1,1,1),
-#							padding="same",
-#							activation='relu',
-#							name='conv4'))
+	#model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
 
 
-	#model.add(ZeroPadding3D(padding=(1, 1, 1)))
-
-#	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool4'))
-
-
-	#model.add(BatchNormalization())
-
-	model.add(Dense(64, activation = 'relu'))
-
+	model.add(Dense(1024, activation = 'relu'))
 	model.add(Flatten())
-
-#	model.add(Dropout(0.3))
 
 	if weights_path:
 		model.load_weights(weights_path)
 	model.add(Dense(classes, activation='softmax'))
 
-	#print(model.summary())
-
+	print(model.summary())
 	return model
 
 
 
-def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=None, model_freeze = False):
+def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None, filters = 8):
 
 	a = Input(shape=(1,spatial_size, spatial_size))
 	b = Input(shape=(1,spatial_size, spatial_size))
 
 
-	u = Conv2D(filters=8,
+	u = Conv2D(filters=filters,
 				kernel_size=(4, 4),
 				strides=(2,2),
 				padding="same",
@@ -334,7 +305,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 
 	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_u')(u)
 
-	v = Conv2D(filters=8,
+	v = Conv2D(filters=filters,
 				kernel_size=(4, 4),
 				strides=(2,2),
 				padding="same",
@@ -344,7 +315,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_v')(v)
 
 
-	u = Conv2D(filters=16,
+	u = Conv2D(filters=filters*2,
 							kernel_size=(4, 4),
 							strides=(2,2),
 							padding="same",
@@ -353,7 +324,7 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 
 	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_u')(u)
 
-	v = Conv2D(filters=16,
+	v = Conv2D(filters=filters*2,
 							kernel_size=(4, 4),
 							strides=(2,2),
 							padding="same",
@@ -372,77 +343,9 @@ def apex_cnn_sep(spatial_size, temporal_size, classes, channels, weights_path=No
 	x = Dense(1024, activation='relu', name = 'dense_2')(x)
 	x = Dropout(0.25)(x)
 
-	#if model_freeze: x = pop(x)
-
 	x = Dense(classes, activation='softmax', name = 'dense_3')(x)
 
 	model = Model(inputs = [a,b], outputs = x)
 
 	print(model.summary())
 	return model
-
-
-
-
-def apex_cnn_bigger(spatial_size, temporal_size, classes, channels, weights_path=None, model_freeze = False):
-
-	a = Input(shape=(1,spatial_size, spatial_size))
-	b = Input(shape=(1,spatial_size, spatial_size))
-
-
-	u = Conv2D(filters=32,
-				kernel_size=(4, 4),
-				strides=(2,2),
-				padding="same",
-				activation='relu',
-				name='conv1_u')(a)
-
-	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_u')(u)
-
-	v = Conv2D(filters=32,
-				kernel_size=(4, 4),
-				strides=(2,2),
-				padding="same",
-				activation='relu',
-				name='conv1_v')(b)
-
-	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool1_v')(v)
-
-
-	u = Conv2D(filters=64,
-							kernel_size=(4, 4),
-							strides=(2,2),
-							padding="same",
-							activation='relu',
-							name='conv2_u')(u)
-
-	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_u')(u)
-
-	v = Conv2D(filters=64,
-							kernel_size=(4, 4),
-							strides=(2,2),
-							padding="same",
-							activation='relu',
-							name='conv2_v')(v)
-
-	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_v')(v)
-
-	u = Flatten()(u)
-	v = Flatten()(v)
-
-	x = concatenate([u,v])
-
-
-	x = Dense(1024, activation='relu', name = 'dense_1')(x)
-	x = Dense(1024, activation='relu', name = 'dense_2')(x)
-	x = Dropout(0.25)(x)
-
-	#if model_freeze: x = pop(x)
-
-	x = Dense(classes, activation='softmax', name = 'dense_3')(x)
-
-	model = Model(inputs = [a,b], outputs = x)
-
-	print(model.summary())
-	return model
-
