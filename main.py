@@ -1,5 +1,5 @@
 import argparse
-#from train import train
+from train import train
 from train_c3d import train_c3d
 from train_apex import train_apex
 from train_cnn_lstm import train_cnn_lstm
