@@ -58,7 +58,7 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 		#VidPerSubject = get_vid_per_subject(table, ['fear', 'sadness'])
 		VidPerSubject,vidList = get_vid_per_subject_augmented(db_images)
 
-		timesteps_TIM = 10
+		timesteps_TIM = 9
 		data_dim = r * w
 		channel = 3		
 
@@ -261,7 +261,6 @@ def load_db(db_path, list_db, spatial_size, objective_flag):
 def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
 	Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
 	# Rearrange Training labels into a vector of images, breaking sequence
-
 	Train_X_spatial = Train_X.reshape(Train_X.shape[0]*timesteps_TIM, r, w, channel)
 	Test_X_spatial = Test_X.reshape(Test_X.shape[0]* timesteps_TIM, r, w, channel)
 
@@ -272,11 +271,11 @@ def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, time
 
 	X = Train_X_spatial.reshape(Train_X_spatial.shape[0], r, w, channel)
 	y = Train_Y_spatial.reshape(Train_Y_spatial.shape[0], n_exp)
-	normalized_X = X.astype('float32') / 255.
+	#if channel == 3: X = X.astype('float32') / 255.
 
 	test_X = Test_X_spatial.reshape(Test_X_spatial.shape[0], r, w, channel)
 	test_y = Test_Y_spatial.reshape(Test_Y_spatial.shape[0], n_exp)
-	normalized_test_X = test_X.astype('float32') / 255.
+	#if channel == 3: test_X = test_X.astype('float32') / 255.
 
 
 	print ("Train_X_shape: " + str(np.shape(Train_X)))
@@ -290,7 +289,7 @@ def restructure_data(subject, subperdb, labelpersub, subjects, n_exp, r, w, time
 
 
 
-	return Train_X, Train_Y, Test_Y, Test_Y, Test_Y_gt, X, y, test_X, test_y
+	return Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt, X, y, test_X, test_y
 
 
 def restructure_data_c3d(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
@@ -362,3 +361,39 @@ def restructure_data_apex(subject, subperdb, labelpersub, subjects, n_exp, r, w,
 	print ("Test_Y_shape: " + str(np.shape(Test_Y)))	
 
 	return Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt
+
+
+
+
+def restructure_data_original(subject, subperdb, labelpersub, subjects, n_exp, r, w, timesteps_TIM, channel):
+	Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt = data_loader_with_LOSO(subject, subperdb, labelpersub, subjects, n_exp)
+	# Rearrange Training labels into a vector of images, breaking sequence
+	Train_X_spatial = Train_X.reshape(Train_X.shape[0]*timesteps_TIM, r, w, channel)
+	Test_X_spatial = Test_X.reshape(Test_X.shape[0]* timesteps_TIM, r, w, channel)
+
+	# Extend Y labels 10 fold, so that all images have labels
+	Train_Y_spatial = np.repeat(Train_Y, timesteps_TIM, axis=0)
+	Test_Y_spatial = np.repeat(Test_Y, timesteps_TIM, axis=0)	
+
+
+	X = Train_X_spatial.reshape(Train_X_spatial.shape[0], channel, r, w)
+	y = Train_Y_spatial.reshape(Train_Y_spatial.shape[0], n_exp)
+	normalized_X = X.astype('float32') / 255.
+
+	test_X = Test_X_spatial.reshape(Test_X_spatial.shape[0], channel, r, w)
+	test_y = Test_Y_spatial.reshape(Test_Y_spatial.shape[0], n_exp)
+	normalized_test_X = test_X.astype('float32') / 255.
+
+
+	print ("Train_X_shape: " + str(np.shape(Train_X)))
+	print ("Train_Y_shape: " + str(np.shape(Train_Y)))
+	print ("Test_X_shape: " + str(np.shape(Test_X)))
+	print ("Test_Y_shape: " + str(np.shape(Test_Y)))	
+	print ("X_shape: " + str(np.shape(X)))
+	print ("y_shape: " + str(np.shape(y)))
+	print ("test_X_shape: " + str(np.shape(test_X)))	
+	print ("test_y_shape: " + str(np.shape(test_y)))	
+
+
+
+	return Train_X, Train_Y, Test_Y, Test_Y, Test_Y_gt, X, y, test_X, test_y
