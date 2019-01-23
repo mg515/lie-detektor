@@ -38,7 +38,7 @@ from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data_c3d, restructure_data_apex
-from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, apex_cnn_sep, apex_cnn_bigger
+from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder
 
 from data_preprocess import optical_flow_2d
 
@@ -125,7 +125,7 @@ def train_apex(batch_size, spatial_epochs, train_id, list_dB, spatial_size, obje
 
 		############### Reinitialization & weights reset of models ########################
 
-		apex_model = apex_cnn_bigger(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
+		apex_model = apex_cnn(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2, filters=16)
 		apex_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		#svm_classifier = SVC(kernel='linear', C=1)

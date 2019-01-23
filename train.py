@@ -41,7 +41,7 @@ from utilities import record_loss_accuracy, record_weights, record_scores, LossH
 from utilities import sanity_check_image, gpu_observer
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
-from list_databases import load_db, restructure_data
+from list_databases import load_db, restructure_data, restructure_data_original
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder
 
 from keras import backend as K
@@ -184,9 +184,6 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
 
-	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
-
 	# Different Conditions for Temporal Learning ONLY
 	if train_spatial_flag == 0 and train_temporal_flag == 1 and dB != 'CASME2_Optical':
 		data_dim = spatial_size * spatial_size
@@ -209,6 +206,8 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 	subjects_todo = read_subjects_todo(db_home, dB, train_id, subjects)
 
 	for sub in subjects_todo:
+		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
+
 		print("**** starting subject " + str(sub) + " ****")
 		#gpu_observer()
 		spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/vgg_spatial_'+ str(train_id) + '_' + str(dB) + '_'
@@ -357,6 +356,7 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 					output_gray = model_gray.predict(Train_X_Gray, batch_size=batch_size)
 
 			else:
+				import ipdb; ipdb.set_trace()
 				vgg_model.fit(X, y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 			print(".record f1 and loss")
@@ -482,6 +482,11 @@ def train(batch_size, spatial_epochs, temporal_epochs, train_id, list_dB, spatia
 		elif channel_flag == 4:
 			del Train_X_Strain, Test_X_Strain, Train_Y_Strain, Test_Y_Strain, Train_X_Gray, Test_X_Gray, Train_Y_Gray, Test_Y_Gray
 			del vgg_model_gray, vgg_model_strain, model_gray, model_strain
+		
+		K.get_session().close()
+		cfg = K.tf.ConfigProto()
+		cfg.gpu_options.allow_growth = True
+		K.set_session(K.tf.Session(config=cfg))
 		
 		gc.collect()
 		###################################################

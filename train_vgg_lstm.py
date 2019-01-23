@@ -278,7 +278,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 				vgg_model_gray.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 
 		else:
-			vgg_model = VGG_16(spatial_size = spatial_size, classes=n_exp, channels=3, weights_path='VGG_Face_Deep_16.h5')
+			vgg_model = VGG_16(spatial_size = spatial_size, classes=n_exp, channels=channel, channel_first=False, weights_path='VGG_Face_Deep_16.h5')
 
 			if finetuning_flag == 1:
 				for layer in vgg_model.layers[:33]:
@@ -380,7 +380,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 			print(".spatial encoding")
 			# Spatial Encoding
-			model_int = Model(inputs=vgg_model.input, outputs=vgg_model.get_layer('dense_2').output)
+			model_int = Model(inputs=vgg_model.input, outputs=vgg_model.get_layer('dense_prvi').output)
 
 			#model = record_weights(cnn_model, spatial_weights_name, sub, flag)
 			features = model_int.predict(X, batch_size = batch_size)
@@ -477,7 +477,7 @@ def train_vgg_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 		del vgg_model
 		del temporal_model
-		del model
+		del model_int
 		del Train_X, Test_X, X, y
 		
 		if channel_flag == 1:

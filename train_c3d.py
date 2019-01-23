@@ -37,7 +37,7 @@ from evaluationmatrix import fpr, weighted_average_recall, unweighted_average_re
 from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
-from list_databases import load_db, restructure_data_c3d
+from list_databases import load_db, restructure_data
 from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, c3d
 
 from data_preprocess import optical_flow_2d
@@ -97,20 +97,16 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 	#######################################################
 	# PREPROCESSING STEPS
 	# optical flow
-	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM)
+	SubperdB = optical_flow_2d(SubperdB, samples, r, w, timesteps_TIM, compareFrame1=True)
 
 	gc.collect()
 	########### Model Configurations #######################
-	K.set_image_dim_ordering('th')
+	#K.set_image_dim_ordering('th')
 
 	# config = tf.ConfigProto()
 	# config.gpu_options.allow_growth = True
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
-
-	sgd = optimizers.SGD(lr=0.0001, decay=1e-7, momentum=0.9, nesterov=True)
-	adam = optimizers.Adam(lr=0.00001, decay=0.000001)
-
 	########################################################
 
 	print("Beginning training process.")
@@ -119,18 +115,11 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 
 	for sub in subjects_todo:
 		print("**** starting subject " + str(sub) + " ****")
-#		gpu_observer()
-		#spatial_weights_name = root_db_path + 'Weights/'+ str(train_id) + '/c3d_'+ str(train_id) + '_' + str(dB) + '_'
-
-		gc.collect()
 		############### Reinitialization & weights reset of models ########################
-
+		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
 		c3d_model = c3d(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
 		c3d_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
-
-		#svm_classifier = SVC(kernel='linear', C=1)
 		####################################################################################
-		
 		
 		############ for tensorboard ###############
 		if tensorboard_flag == 1:
@@ -140,7 +129,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 			os.mkdir(cat_path2)
 			tbCallBack2 = keras.callbacks.TensorBoard(log_dir=cat_path2, write_graph=True)
 		#############################################
-		Train_X, Train_Y, Train_Y_gt, Test_X, Test_Y, Test_Y_gt = restructure_data_c3d(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
+		Train_X, Train_Y, Test_X, Test_Y, Test_Y_gt, X, y, test_X, test_y = restructure_data(sub, SubperdB, labelperSub, subjects, n_exp, r, w, timesteps_TIM, 2)
 		#Train_X, Train_Y, Train_Y_gt = upsample_training_set(Train_X, Train_Y, Train_Y_gt)
 
 		############### check gpu resources ####################
@@ -165,6 +154,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
+		print(Test_X.shape)
 		predict_values = c3d_model.predict(Test_X, batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
