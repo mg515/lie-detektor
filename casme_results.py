@@ -127,6 +127,33 @@ print(acc)
 print(f1)
 print(cm)
 
+
+print('**** c3d_id1 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_c3d_id1.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
+print('**** VGG_lstm_id1 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Color_TIM10/Classification/Result/predicts_casme2_vgg_lstm_id1.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+print('**** VGG_lstm_id2 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Optical/Classification/Result/predicts_casme2_vgg_lstm_id2.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
 print('****** CASME 1 & 2 COMBINED ******')
 print('**** casme12_cnn_lstm_id2 ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME12_Color_TIM10/Classification/Result/predicts_casme12_cnn_lstm_id2.txt'
