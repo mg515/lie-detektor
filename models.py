@@ -15,7 +15,7 @@ import scipy.io as sio
 
 from keras.models import Sequential, Model
 from keras.layers.core import Flatten, Dense, Dropout
-from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D
+from keras.layers.convolutional import Conv2D, Conv3D, MaxPooling2D, ZeroPadding2D
 from keras.layers.convolutional import Convolution3D, MaxPooling3D, ZeroPadding3D
 from keras.layers import LSTM, GlobalAveragePooling2D, GRU, Bidirectional, UpSampling2D, BatchNormalization, concatenate, Input
 from keras.optimizers import SGD
@@ -247,38 +247,29 @@ def VGG_16_tim(spatial_size, classes, channels, channel_first=True, weights_path
 	return model
 
 
-def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
+def c3d_channels(spatial_size, temporal_size, classes, channels, weights_path=None):
 	model = Sequential()
 	model.add(Convolution3D(filters=64,
-							kernel_size=(2, 2, 2),
+							kernel_size=(5, 4, 4),
 							strides=(1,2,2),
 							padding="same",
 							activation='relu',
 							name='conv1',
 							input_shape=(temporal_size, spatial_size, spatial_size, channels)))
 
-	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool1'))
+	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2), padding="valid", name='pool1'))
 
 	model.add(Convolution3D(filters=128,
-							kernel_size=(2,2,2),
+							kernel_size=(5,4,4),
 							strides=(1,2,2),
 							padding="same",
 							activation='relu',
 							name='conv2'))
 
-	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1, 2, 2), padding="valid", name='pool2'))
-
-	# model.add(Convolution3D(filters=64,
-	# 						kernel_size=(2,3,3),
-	# 						strides=(1,1,1),
-	# 						padding="same",
-	# 						activation='relu',
-	# 						name='conv3'))
-
-	#model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2), padding="valid", name='pool3'))
-
+	model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2), padding="valid", name='pool2'))
 
 	model.add(Dense(1024, activation = 'relu'))
+	model.add(Dropout(0.25))
 	model.add(Flatten())
 
 	if weights_path:
@@ -288,6 +279,68 @@ def c3d(spatial_size, temporal_size, classes, channels, weights_path=None):
 	print(model.summary())
 	return model
 
+
+
+def c3d_2stream(spatial_size, temporal_size, classes, channels, weights_path=None):
+	
+
+	a = Input(shape=(temporal_size, spatial_size, spatial_size, 1))
+	b = Input(shape=(temporal_size, spatial_size, spatial_size, 1))
+
+	u = Conv3D(filters = 32,
+				kernel_size = (4,3,3),
+				strides = (2,2,2),
+				padding = "same",
+				activation = 'relu',
+				name = 'conv1_u')(a)
+
+
+	v = Conv3D(filters = 32,
+				kernel_size = (4,3,3),
+				strides = (2,2,2),
+				padding = "same",
+				activation = 'relu',
+				name = 'conv1_v')(b)
+
+	u = MaxPooling3D(pool_size = (1,2,2), strides = (1,2,2), padding = "same", name = 'pool1_u')(u)
+	v = MaxPooling3D(pool_size = (1,2,2), strides = (1,2,2), padding = "same", name = 'pool1_v')(v)
+
+	u = Conv3D(filters = 64,
+			kernel_size = (4,3,3),
+			strides = (2,2,2),
+			padding = "same",
+			activation = 'relu',
+			name = 'conv2_u')(u)
+
+
+	v = Conv3D(filters = 64,
+			kernel_size = (4,3,3),
+			strides = (2,2,2),
+			padding = "same",
+			activation = 'relu',
+			name = 'conv2_v')(v)
+
+	u = MaxPooling3D(pool_size = (1,2,2), strides = (1,2,2), padding = "same", name = 'pool2_u')(u)
+	v = MaxPooling3D(pool_size = (1,2,2), strides = (1,2,2), padding = "same", name = 'pool2_v')(v)
+
+	u = Flatten()(u)
+	v = Flatten()(v)
+
+	x = concatenate([u,v])
+
+	x = Dense(1024, activation='relu', name = 'dense_1')(x)
+	x = Dense(1024, activation='relu', name = 'dense_2')(x)
+	x = Dropout(0.25)(x)
+
+	x = Dense(classes, activation='softmax', name = 'dense_3')(x)
+
+	model = Model(inputs = [a,b], outputs = x)
+
+	if weights_path:
+		model.load_weights(weights_path)
+
+	print(model.summary())
+	return model
 
 
 def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None, filters = 8):
