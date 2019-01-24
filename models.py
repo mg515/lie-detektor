@@ -146,8 +146,8 @@ def VGG_16(spatial_size, classes, channels, channel_first=False, weights_path=No
 
 def temporal_module(data_dim, timesteps_TIM, classes, lstm1_size, weights_path=None):
 	model = Sequential()
-	model.add(LSTM(lstm1_size, return_sequences=False, input_shape=(timesteps_TIM, data_dim)))
-	#model.add(LSTM(3000, return_sequences=False))
+	model.add(LSTM(lstm1_size, return_sequences=True, input_shape=(timesteps_TIM, data_dim)))
+	model.add(LSTM(lstm1_size, return_sequences=False))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(classes, activation='sigmoid'))
 
