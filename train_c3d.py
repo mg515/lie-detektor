@@ -38,7 +38,7 @@ from utilities import *
 #from samm_utilitis import get_subfolders_num_crossdb, Read_Input_Images_SAMM_CASME, loading_samm_labels
 
 from list_databases import load_db, restructure_data
-from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, c3d
+from models import VGG_16, temporal_module, VGG_16_4_channels, convolutional_autoencoder, c3d_2stream, c3d_channels
 
 from data_preprocess import optical_flow_2d
 
@@ -69,7 +69,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 	tot_mat = np.zeros((n_exp, n_exp))
 
 	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 5)
 
 	############################################
 
@@ -117,7 +117,7 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 		print("**** starting subject " + str(sub) + " ****")
 		############### Reinitialization & weights reset of models ########################
 		adam = optimizers.Adam(lr=0.00001, decay=0.000001)
-		c3d_model = c3d(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
+		c3d_model = c3d_2stream(spatial_size=spatial_size, temporal_size=timesteps_TIM, classes=n_exp, channels=2)
 		c3d_model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=[metrics.categorical_accuracy])
 		####################################################################################
 		
@@ -138,13 +138,16 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 
 		print("Beginning training & testing.")
 		##################### Training & Testing #########################
+		# Reshape for optical flow 2stream training
+		input_u = Train_X[:,:,:,:,0].reshape(Train_X.shape[0], timesteps_TIM, 224,224, 1)
+		input_v = Train_X[:,:,:,:,1].reshape(Train_X.shape[0], timesteps_TIM, 224,224, 1)
 
 		print("Beginning c3d training.")
 		# Spatial Training
 		if tensorboard_flag == 1:
-			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
+			c3d_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
 		else:
-			c3d_model.fit(Train_X, Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
+			c3d_model.fit([input_u, input_v], Train_Y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
 
 		print(".record f1 and loss")
@@ -154,8 +157,10 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 		print("Beginning testing.")
 		print(".predicting with c3d_model")
 		# Testing
-		print(Test_X.shape)
-		predict_values = c3d_model.predict(Test_X, batch_size = batch_size)
+		input_u = Test_X[:,:,:,:,0].reshape(Test_X.shape[0], timesteps_TIM, 224,224, 1)
+		input_v = Test_X[:,:,:,:,1].reshape(Test_X.shape[0], timesteps_TIM, 224,224, 1)
+
+		predict_values = c3d_model.predict([input_u, input_v], batch_size = batch_size)
 		predict = np.array([np.argmax(x) for x in predict_values])
 		##############################################################
 
@@ -209,6 +214,11 @@ def train_c3d(batch_size, spatial_epochs, train_id, list_dB, spatial_size, objec
 
 		del c3d_model
 		del Train_X, Test_X, Train_Y, Test_Y
+		
+		K.get_session().close()
+		cfg = K.tf.ConfigProto()
+		cfg.gpu_options.allow_growth = True
+		K.set_session(K.tf.Session(config=cfg))
 		
 		gc.collect()
 		###################################################

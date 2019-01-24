@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import scipy as sc
 from utilities import read_results
-
+from Visualisation.confusion_matrix import plot_confusion_matrix
 
 print('**** apex1 ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_id1.txt'
@@ -34,6 +34,7 @@ print(acc)
 print(f1)
 print(cm)
 
+#plot_confusion_matrix(cm, classes = ['P','N','Pr','O'], title = "", normalize=True)
 
 
 print('**** apex3 ****')
@@ -81,6 +82,10 @@ table,acc,f1,cm = read_results(path)
 print(acc)
 print(f1)
 print(cm)
+
+
+
+
 
 
 print('**** cnn_lstm_id3 ****')
@@ -135,6 +140,35 @@ table,acc,f1,cm = read_results(path)
 print(acc)
 print(f1)
 print(cm)
+
+
+
+print('**** c3d_id2 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_c3d_id2.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
+print('**** c3d_id3 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_c3d_id3.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+print('**** c3d_id4 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_c3d_id4.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+
 
 
 print('**** VGG_lstm_id1 ****')
