@@ -34,8 +34,6 @@ print(acc)
 print(f1)
 print(cm)
 
-#plot_confusion_matrix(cm, classes = ['P','N','Pr','O'], title = "", normalize=True)
-
 
 print('**** apex3 ****')
 path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_Cropped/Classification/Result/predicts_casme2_apex_id3.txt'
@@ -131,6 +129,27 @@ table,acc,f1,cm = read_results(path)
 print(acc)
 print(f1)
 print(cm)
+
+
+print('**** cnn_lstm_id8 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_cnn_lstm_id8.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
+plot_confusion_matrix(cm, classes = ['P','N','Pr','O'], title = "", normalize=True)
+
+
+print('**** cnn_lstm_id9 ****')
+path = '/media/ostalo/MihaGarafolj/ME_data/CASME2_TIM10/Classification/Result/predicts_casme2_cnn_lstm_id9.txt'
+table,acc,f1,cm = read_results(path)
+
+print(acc)
+print(f1)
+print(cm)
+
 
 
 print('**** c3d_id1 ****')

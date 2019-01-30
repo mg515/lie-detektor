@@ -386,6 +386,26 @@ def apex_cnn(spatial_size, temporal_size, classes, channels, weights_path=None, 
 
 	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool2_v')(v)
 
+
+	u = Conv2D(filters=filters*4,
+							kernel_size=(4, 4),
+							strides=(2,2),
+							padding="same",
+							activation='relu',
+							name='conv3_u')(u)
+
+	u = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool3_u')(u)
+
+	v = Conv2D(filters=filters*4,
+							kernel_size=(4, 4),
+							strides=(2,2),
+							padding="same",
+							activation='relu',
+							name='conv3_v')(v)
+
+	v = MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same", name='pool3_v')(v)
+
+
 	u = Flatten()(u)
 	v = Flatten()(v)
 

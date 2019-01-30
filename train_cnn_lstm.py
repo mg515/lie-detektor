@@ -104,7 +104,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 	# config.gpu_options.per_process_gpu_memory_fraction = 0.8
 	# K.tensorflow_backend.set_session(tf.Session(config=config))
 	history = LossHistory()
-	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 3)
+	stopping = EarlyStopping(monitor='loss', min_delta = 0, mode = 'min', patience = 5)
 
 	print("Beginning training process.")
 	########### Training Process ############
@@ -152,7 +152,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 		input_u = X[:,:,:,0].reshape(X.shape[0], 1, 224,224)
 		input_v = X[:,:,:,1].reshape(X.shape[0], 1, 224,224)
 		if tensorboard_flag == 1:
-			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping,tbCallBack2])
+			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 		else:
 			cnn_model.fit([input_u, input_v], y, batch_size=batch_size, epochs=spatial_epochs, shuffle=True, callbacks=[history,stopping])
 
@@ -166,7 +166,7 @@ def train_cnn_lstm(batch_size, spatial_epochs, temporal_epochs, train_id, list_d
 
 		# Temporal Training
 		if tensorboard_flag == 1:
-			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs, callbacks=[tbCallBack])
+			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs)
 		else:
 			temporal_model.fit(features, Train_Y, batch_size=batch_size, epochs=temporal_epochs)
 
